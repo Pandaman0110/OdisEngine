@@ -8,9 +8,9 @@ namespace OdisEngine
 	class Renderer
 	{
 	public:
-		Renderer(const Window& window);
+		Renderer(Window& window);
 
-		int swapBuffers();
+		int swap_buffers();
 		void clear();
 
 		void termimate();

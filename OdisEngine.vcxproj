@@ -176,11 +176,15 @@
     <ClCompile Include="src\Camera3D.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="OdisEngine.cpp" />
+    <ClCompile Include="src\InputEvent.cpp" />
+    <ClCompile Include="src\InputMap.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\InputEvent.h" />
+    <ClInclude Include="include\Keys.h" />
     <ClInclude Include="include\OdisMath.h" />
     <ClInclude Include="include\OdisEngine.h" />
     <ClInclude Include="include\Renderer.h" />

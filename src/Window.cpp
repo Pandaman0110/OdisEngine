@@ -1,15 +1,25 @@
 #include "Window.h"
 
-
 #include <bx/bx.h>
-
 #include <GLFW/glfw3.h>
+
+#if BX_PLATFORM_LINUX
+#define GLFW_EXPOSE_NATIVE_X11
+#elif BX_PLATFORM_WINDOWS
+#define GLFW_EXPOSE_NATIVE_WIN32
+#elif BX_PLATFORM_OSX
+#define GLFW_EXPOSE_NATIVE_COCOA
+#endif
+
+#include <GLFW/glfw3native.h>
+
+#include "InputEvent.h"
 
 using namespace OdisEngine;
 
 Window::Window(int width, int height, std::string name, bool fullscreen_mode)
 {
-	glfwSetErrorCallback(glfwErrorCallback);
+	glfwSetErrorCallback(error_callback);
 
 	//initiliaze GLFW
 	if (!glfwInit())
@@ -23,30 +33,57 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode)
 
 	//create the window
 	if (fullscreen_mode)
-		native_window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), nullptr);
+		window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), nullptr);
 	else
-		native_window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+		window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
-	if (!native_window)
+	if (!window)
 	{
 		std::cout << "GLFW window creation failed" << std::endl;
 		std::abort();
 	}
+
+	glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 	monitor_width = mode->width;
 	monitor_height = mode->height;
 
-	glfwGetWindowSize(native_window, &window_width, &window_height);
+	glfwGetWindowSize(window, &window_width, &window_height);
+
 }
 
-int Window::shouldClose()
+int Window::should_close()
 {
-	return glfwWindowShouldClose(native_window);
+	return glfwWindowShouldClose(window);
 }
 
 void Window::terminate()
 {
 	glfwTerminate();
 }
+
+void Window::error_callback(int error, const char* description)
+{
+	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
+}
+
+#if BX_PLATFORM_WINDOWS
+HWND Window::getWin32Window()
+{
+	return glfwGetWin32Window(window);
+}
+
+#elif BX_PLATFORM_OSX
+NSWindow Window::glfwGetCocoaWindow()
+{
+	return glfwGetCocoaWindow(window);
+}
+
+#elif BX_PLATFORM_LINUX
+Display Window::glfwGetX11Window()
+{
+	return glfwGetX11Window(window);
+}
+#endif 

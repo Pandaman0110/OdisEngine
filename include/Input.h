@@ -4,46 +4,57 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 
 #include <GLFW/glfw3.h>
 
+#include "Window.h"
+#include "Keys.h"
+#include "InputEvent.h"
+
 namespace OdisEngine
 {
+
 	class InputMap
 	{
 	public:
 		InputMap();
 
-		void addEvent (std::string action, int event);
-		void eraseEvent (std::string action, int event);
-		void removeEvents (std::string action);
+		void add_event(std::string action, int event);
+		void erase_event(std::string action, int event);
+		void remove_events(std::string action);
 
-		void addAction (std::string action);
-		void eraseAction (std::string action);
+		void add_action(std::string action);
+		void erase_action(std::string action);
 
-		std::vector<std::string> getActions() const;
+		void load_actions_from_config ();
+
+		std::vector<std::string> get_actions() const;
 
 	private:
 		//std::multimap<std::string, >
 
 	};
 
-
+	typedef std::list<InputEvent> InputQueue;
 
 	class Input
 	{
 	public:
-		Input();
+		Input(Window& window);
 
-		void pollInputs();
+		bool is_action_pressed(std::string action) const;
+		bool is_action_released(std::string action) const;
+		bool is_action_down(std::string action) const;
 
-		bool isActionPressed(std::string action) const;
-		bool isActionRelease(std::string action) const;
-		bool isActionDown(std::string action) const;
-
+		void poll_inputs();
 	private:
-		InputMap input_map;
+		static bool polling;
 
+		InputMap input_map;
+		static InputQueue input_queue;
+
+		static void keyboard_input_event(GLFWwindow* window, int key, int scancode, int action, int mods);
 	};
 
 }
