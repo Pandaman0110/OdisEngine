@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "Window.h"
@@ -49,8 +50,6 @@ namespace OdisEngine
 
 		void poll_inputs();
 	private:
-		static bool polling;
-
 		InputMap input_map;
 		static InputQueue input_queue;
 

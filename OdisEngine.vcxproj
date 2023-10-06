@@ -74,23 +74,29 @@
     <IncludePath>external\msvc;external;include;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\debug$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
+    <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>external\msvc;external;include;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\release$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
+    <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>external\msvc;external;include;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
+    <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>external\msvc;external;include;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
+    <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -102,6 +108,8 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +129,8 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +151,8 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +173,8 @@
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +185,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="external\gl.c" />
+    <ClCompile Include="src\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\GLSLShader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Camera2D.cpp" />
     <ClCompile Include="src\Camera3D.cpp" />
@@ -180,8 +197,15 @@
     <ClCompile Include="src\InputMap.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="external\vulkan.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\entt.hpp" />
+    <ClInclude Include="external\stb_image.h" />
+    <ClInclude Include="external\toml.hpp" />
+    <ClInclude Include="external\vk_platform.h" />
+    <ClInclude Include="include\GLSLShader.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\Keys.h" />
@@ -191,6 +215,18 @@
     <ClInclude Include="include\Surface.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\OpenGLRenderer.h" />
+    <ClInclude Include="include\Texture2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="external\bgfxDebug.lib" />
+    <Library Include="external\bgfxRelease.lib" />
+    <Library Include="external\bimgDebug.lib" />
+    <Library Include="external\bimgRelease.lib" />
+    <Library Include="external\box2d.lib" />
+    <Library Include="external\bxDebug.lib" />
+    <Library Include="external\bxRelease.lib" />
+    <Library Include="external\glfw3.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

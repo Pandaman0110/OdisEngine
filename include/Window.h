@@ -5,14 +5,15 @@
 #include <vector>
 #include <functional>
 
-#include <GLFW/glfw3.h>
-#include <bx/bx.h>
+#include <glad/gl.h>
 
-#if BX_PLATFORM_LINUX
+#include <GLFW/glfw3.h>
+
+#if __linux__
 #define GLFW_EXPOSE_NATIVE_X11
-#elif BX_PLATFORM_WINDOWS
+#elif _WIN32
 #define GLFW_EXPOSE_NATIVE_WIN32
-#elif BX_PLATFORM_OSX
+#elif __APPLE__
 #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
@@ -25,6 +26,12 @@ static void glfwErrorCallback(int error, const char* description)
 
 namespace OdisEngine 
 {
+	enum class RenderAPI
+	{
+		OpenGL,
+		Vulkan
+	};
+
 	enum class NativeWindow
 	{
 		WINDOWS,
@@ -36,10 +43,11 @@ namespace OdisEngine
 	{
 
 	public:
-		Window(int width, int height, std::string name, bool fullscreen_mode);
+		Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI);
 
 		int should_close();
 		void terminate();
+		void swap_buffers();
 
 		inline int get_monitor_width() const { return monitor_width; };
 		inline int get_monitor_height() const { return monitor_height; };
@@ -49,15 +57,20 @@ namespace OdisEngine
 
 		GLFWwindow* get_window_handle() const { return window; };
 
-#if BX_PLATFORM_WINDOWS
-		HWND getWin32Window();
-#elif BX_PLATFORM_OSX
-		NSWindow glfwGetCocoaWindow();
-#elif BX_PLATFORM_LINUX
-		Display glfwGetX11Window();
+		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+		void set_window_size_callback(std::function<void(int, int)> window_size_callback);
+
+#if	_WIN32
+		HWND get_win32_window();
+#elif __APPLE__
+		NSWindow get_cocoa_window();
+#elif __linux__
+		Display get_x11_window();
 #endif 
 	private:
 		static void error_callback(int error, const char* description);
+
+		static std::function<void(int, int)> window_size_callback;
 
 		int monitor_width;
 		int monitor_height;
@@ -66,6 +79,11 @@ namespace OdisEngine
 		int window_height;
 
 		GLFWwindow* window;
+
+		void create_window(int width, int height, std::string name, bool fullscreen_mode);
+
+		void window_setup(RenderAPI render_api);
+		void render_api_setup(RenderAPI render_api);
 	};
 
 }

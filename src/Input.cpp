@@ -5,7 +5,6 @@
 using namespace OdisEngine;
 
 InputQueue Input::input_queue;
-bool Input::polling = false;
 
 Input::Input(Window& window)
 {

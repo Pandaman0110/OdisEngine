@@ -1,26 +1,23 @@
 #include "Window.h"
 
-#include <bx/bx.h>
-#include <GLFW/glfw3.h>
-
-#if BX_PLATFORM_LINUX
-#define GLFW_EXPOSE_NATIVE_X11
-#elif BX_PLATFORM_WINDOWS
-#define GLFW_EXPOSE_NATIVE_WIN32
-#elif BX_PLATFORM_OSX
-#define GLFW_EXPOSE_NATIVE_COCOA
-#endif
-
-#include <GLFW/glfw3native.h>
-
-#include "InputEvent.h"
+#include <cassert>
 
 using namespace OdisEngine;
 
-Window::Window(int width, int height, std::string name, bool fullscreen_mode)
-{
-	glfwSetErrorCallback(error_callback);
+std::function<void(int, int)> Window::window_size_callback;
 
+void Window::error_callback(int error, const char* description)
+{
+	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
+}
+
+void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	window_size_callback(width, height);
+}
+
+Window::Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI render_api)
+{
 	//initiliaze GLFW
 	if (!glfwInit())
 	{
@@ -28,20 +25,17 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode)
 		std::abort();
 	}
 
-	//tell glfw to create the window with no API spec
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	//window hinting, happens before window creation
+	this->window_setup(RenderAPI::OpenGL);
 
-	//create the window
-	if (fullscreen_mode)
-		window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), nullptr);
-	else
-		window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+	//actually creates the window
+	this->create_window(width, height, name, fullscreen_mode);
 
-	if (!window)
-	{
-		std::cout << "GLFW window creation failed" << std::endl;
-		std::abort();
-	}
+	//sets up window related stuff for the choosen render api
+	this->render_api_setup(RenderAPI::OpenGL);
+
+
+
 
 	glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 
@@ -52,6 +46,70 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode)
 
 	glfwGetWindowSize(window, &window_width, &window_height);
 
+	glfwSetErrorCallback(error_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+}
+
+void Window::window_setup(RenderAPI render_api)
+{
+	switch (render_api)
+	{
+	case RenderAPI::OpenGL:
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		//Core profile so we dont have deprecated features
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		break;
+	case RenderAPI::Vulkan:
+		break;
+	default:
+		std::cout << "No render api choosen" << std::endl;
+		std::abort();
+		break;
+	}
+}
+
+void Window::create_window(int width, int height, std::string name, bool fullscreen_mode)
+{
+	//create the window
+	if (fullscreen_mode)
+		window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), nullptr);
+	else
+		window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+
+	assert(window != NULL && "Failed to create GLFW window ABORT ABORT\n");
+}
+
+void Window::render_api_setup(RenderAPI render_api)
+{
+	int version;
+
+	switch (render_api)
+	{
+	case RenderAPI::OpenGL:
+
+		glfwMakeContextCurrent(window);
+
+		version = gladLoadGL(glfwGetProcAddress);
+		if (version == 0)
+		{
+			std::cout << "Failed to initialize OpenGL context ABORT ABORT" << std::endl;
+			std::abort();
+		}
+
+		std::cout << "Loaded OpenGL version: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
+
+		break;
+	case RenderAPI::Vulkan:
+
+
+		break;
+	default:
+		std::cout << "No render api choosen" << std::endl;
+		std::abort();
+		break;
+	}
 }
 
 int Window::should_close()
@@ -64,25 +122,31 @@ void Window::terminate()
 	glfwTerminate();
 }
 
-void Window::error_callback(int error, const char* description)
+void Window::swap_buffers()
 {
-	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
+	glfwSwapBuffers(window);
 }
 
-#if BX_PLATFORM_WINDOWS
-HWND Window::getWin32Window()
+void Window::set_window_size_callback(std::function<void(int, int)> window_size_callback)
+{
+	Window::window_size_callback = window_size_callback;
+}
+
+
+#if _WIN32
+HWND Window::get_win32_window()
 {
 	return glfwGetWin32Window(window);
 }
 
-#elif BX_PLATFORM_OSX
-NSWindow Window::glfwGetCocoaWindow()
+#elif __APPLE__
+NSWindow Window::get_cocoa_window()
 {
 	return glfwGetCocoaWindow(window);
 }
 
-#elif BX_PLATFORM_LINUX
-Display Window::glfwGetX11Window()
+#elif __linux__
+Display Window::get_x11window()
 {
 	return glfwGetX11Window(window);
 }

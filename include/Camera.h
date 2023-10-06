@@ -17,11 +17,11 @@ class Camera2D : public Camera
 public:	
 	Camera2D();
 
-	vec2 getPosition() const { return position; };
-	float getOrientation() const { return orientation; };
+	vec2 get_position() const { return position; };
+	float get_orientation() const { return orientation; };
 
-	inline void setPosition(vec2 position) { this->position = position; };
-	inline void setOrientation(float rotation) { this->orientation = rotation; };
+	inline void set_position(vec2 position) { this->position = position; };
+	inline void set_orientation(float rotation) { this->orientation = rotation; };
 
 	inline void move(vec2 velocity) { this->position += velocity; };
 	inline void rotate(float rotation) { this->orientation += rotation; };
