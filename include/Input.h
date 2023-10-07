@@ -4,10 +4,6 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <set>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 
 #include "Window.h"
 #include "Keys.h"
@@ -37,7 +33,6 @@ namespace OdisEngine
 
 	};
 
-	typedef std::list<InputEvent> InputQueue;
 
 	class Input
 	{
@@ -48,12 +43,16 @@ namespace OdisEngine
 		bool is_action_released(std::string action) const;
 		bool is_action_down(std::string action) const;
 
+		bool is_key_pressed(Key key) const;
+		bool is_key_released(Key key) const;
+		bool is_key_down(Key key) const;
+
 		void poll_inputs();
 	private:
 		InputMap input_map;
-		static InputQueue input_queue;
+		std::vector<KeyboardInputEvent> keyboard_input_queue;
 
-		static void keyboard_input_event(GLFWwindow* window, int key, int scancode, int action, int mods);
+		void keyboard_input_callback(KeyboardInputEvent keyboard_input_event);
 	};
 
 }

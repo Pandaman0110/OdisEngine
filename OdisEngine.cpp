@@ -13,15 +13,18 @@ using namespace OdisEngine;
 
 int main()
 {
-    Window window = Window(800, 600, "OdisEngine", false, RenderAPI::OpenGL);
-    OpenGLRenderer renderer = OpenGLRenderer(window);
+    Window window(800, 600, "OdisEngine", false, RenderAPI::OpenGL);
+    OpenGLRenderer renderer(window);
     //Renderer renderer = Renderer(window);
-    Input input = Input(window);
+    Input input(window);
 
     while (!window.should_close()) {
+
+        if (input.is_key_down(Key::KEY_D))
+            std::cout << "CUM NUGGETS" << std::endl;
+      
         input.poll_inputs();
-       
-        window.swap_buffers();
+        window.end_frame();
     }
 
    // renderer.termimate();

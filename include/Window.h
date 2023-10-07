@@ -6,7 +6,6 @@
 #include <functional>
 
 #include <glad/gl.h>
-
 #include <GLFW/glfw3.h>
 
 #if __linux__
@@ -18,6 +17,8 @@
 #endif
 
 #include <GLFW/glfw3native.h>
+
+#include "InputEvent.h"
 
 static void glfwErrorCallback(int error, const char* description)
 {
@@ -47,7 +48,7 @@ namespace OdisEngine
 
 		int should_close();
 		void terminate();
-		void swap_buffers();
+		void end_frame();
 
 		inline int get_monitor_width() const { return monitor_width; };
 		inline int get_monitor_height() const { return monitor_height; };
@@ -55,10 +56,15 @@ namespace OdisEngine
 		inline int get_window_width() const { return window_width; };
 		inline int get_window_height() const { return window_height; };
 
-		GLFWwindow* get_window_handle() const { return window; };
+		//
 
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 		void set_window_size_callback(std::function<void(int, int)> window_size_callback);
+
+		static void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		void set_keyboard_input_callback(std::function<void(KeyboardInputEvent)> keyboard_input_callback);
+
+		GLFWwindow* get_window_handle() const { return window; };
 
 #if	_WIN32
 		HWND get_win32_window();
@@ -71,6 +77,7 @@ namespace OdisEngine
 		static void error_callback(int error, const char* description);
 
 		static std::function<void(int, int)> window_size_callback;
+		static std::function<void(KeyboardInputEvent)> input_callback;
 
 		int monitor_width;
 		int monitor_height;

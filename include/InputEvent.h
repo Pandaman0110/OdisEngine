@@ -14,34 +14,42 @@ namespace OdisEngine
 	class InputEvent
 	{
 	public:
-		InputEvent(Key key, KeyScancode key_scancode, KeyEvent key_event, KeyName key_name);
+		InputEvent();
 
 		InputEvent& operator++() { frames_held++; echo = true; return *this; };
-		InputEvent operator++(int) { InputEvent tmp(*this); operator++(); return tmp; };
-
-		inline Key get_key() const { return key; };
-		inline KeyName get_key_name() const { return key_name; };
+		InputEvent operator++(int) { InputEvent tmp(*this); operator++(); return *this; };
 		
-		inline bool get_is_pressed() const { return !echo and !get_is_released(); };
-		inline bool get_is_down() const { return frames_held >= KEYDOWN_FRAMECOUNT; };
-		inline bool get_is_released() const { return key_event == KeyEvent::KEY_RELEASED; };
+		inline bool is_pressed() const {  return pressed == true and echo == false; };
+		inline bool is_down() const { return frames_held > KEYDOWN_FRAMECOUNT and echo != false; };
+		inline bool is_released() const { return pressed == false; };
 
-		std::string_view get_event_string() const;
+		inline bool expired() const { return is_released() and frames_held > 0; };
 
-		friend std::ostream& operator<< (std::ostream& stream, const InputEvent& input_event);
+	protected:
+		bool pressed;
 
 	private:
 		bool echo = false;
-		uint16_t frames_held;
+		uint16_t frames_held = 0;
+	};
 
+	class KeyboardInputEvent : public InputEvent
+	{
+	public:
+		KeyboardInputEvent(Key key, KeyScancode key_scancode, bool pressed, KeyName key_name);
+
+		inline bool is(Key key) const { return this->key == key; };
+
+		inline Key get_key() const { return key; };
+		inline KeyName get_key_name() const { return key_name; };
+
+	private:
 		Key key;
 		KeyScancode scancode;
-		KeyEvent key_event;
 		KeyName key_name;
 	};
 
-
-	bool operator== (const InputEvent& lhs, const InputEvent& rhs);
+	bool operator== (const KeyboardInputEvent& lhs, const KeyboardInputEvent& rhs);
 }
 
 
