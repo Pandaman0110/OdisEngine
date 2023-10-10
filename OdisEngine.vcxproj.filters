@@ -24,22 +24,49 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input.cpp">
+    <ClCompile Include="src\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
+    <ClCompile Include="src\Camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Camera2D.cpp">
+    <ClCompile Include="src\Camera\Camera2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Camera3D.cpp">
+    <ClCompile Include="src\Camera\Camera3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputMap.cpp">
+    <ClCompile Include="src\Input\InputMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputEvent.cpp">
+    <ClCompile Include="external\gl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputEvents\KeyboardInputEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL\OpenGLRenderer2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL\GLSLShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputEvents\InputEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL\Texture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\vulkan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,5 +98,76 @@
     <ClInclude Include="include\Keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="external\entt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\toml.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\vk_platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLSLShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Texture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\glad\gl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\glad\vulkan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Script.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\image_DXT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\image_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\SOIL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\stb_image_aug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\stbi_DDS_aug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\SOIL\stbi_DDS_aug_c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="external\box2d.lib" />
+    <Library Include="external\glfw3.lib" />
+    <Library Include="external\SOIL_debug.lib" />
+    <Library Include="external\SOIL_release.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="shaders\sprite.vert" />
+    <None Include="shaders\sprite.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\WarriorsGame\assets\art\tree.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

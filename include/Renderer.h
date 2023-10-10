@@ -17,7 +17,6 @@ namespace OdisEngine
 
 	private:
 		uint16_t clear_view;
-
 	};
 
 	class Viewport
