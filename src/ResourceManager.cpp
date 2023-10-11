@@ -7,24 +7,24 @@
 #include <glad/gl.h>
 #include <SOIL/SOIL.h>
 
-GLSLShader ResourceManager::load_shader(const char* v_shader_file_name, const char* f_shader_file_name, const char* g_shader_file_name, std::string name)
+GLSLShader& ResourceManager::load_shader(const char* v_shader_file_name, const char* f_shader_file_name, const char* g_shader_file_name, std::string name)
 {
     shaders.insert({ name, load_shader_from_file(v_shader_file_name, f_shader_file_name, g_shader_file_name) });
     return shaders.at(name);
 }
 
-GLSLShader ResourceManager::get_shader(std::string name)
+GLSLShader& ResourceManager::get_shader(std::string name)
 {
     return shaders.at(name);
 }
 
-Texture2D ResourceManager::load_texture(const char* file, bool alpha, std::string name)
+Texture2D& ResourceManager::load_texture(const char* file, bool alpha, std::string name)
 {
     textures.insert({ name, load_texture_from_file(file, alpha) });
     return textures.at(name);
 }
 
-Texture2D ResourceManager::get_texture(std::string name)
+Texture2D& ResourceManager::get_texture(std::string name)
 {
     return textures.at(name);
 }

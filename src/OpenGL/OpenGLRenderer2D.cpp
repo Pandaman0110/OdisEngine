@@ -1,5 +1,7 @@
 #include "OpenGLRenderer2D.h"
 
+#include "glad/gl.h"
+
 using namespace OdisEngine;
 
 OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_manager) : resource_manager(&resource_manager)
@@ -12,27 +14,24 @@ OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_man
 
 	mat4 projection = ortho(0.0f, static_cast<float>(window.get_window_width()), static_cast<float>(window.get_window_height()), 0.0f, -1.0f, 1.0f);
 
-    this->resource_manager->load_shader("sprite.vert", "sprite.frag", nullptr, "sprite");
+	sprite_renderer = new SpriteRenderer(this->resource_manager->load_shader("sprite.vert", "sprite.frag", nullptr, "sprite"));
     
     this->resource_manager->get_shader("sprite").use().set_integer("image", 0);
     this->resource_manager->get_shader("sprite").set_matrix4("projection", projection);
 
-    this->resource_manager->load_texture("tree.png", true, "tree");
-    // set render-specific controls
-    //Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
-    // load textures
-    //ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
+    auto &text = this->resource_manager->load_texture("catgreyidle.png", true, "cat");
+
+	std::cout << text.ID << std::endl;
 }
 
-void OpenGLRenderer2D::draw_texture(Texture2D& texture, vec2 position)
+void OpenGLRenderer2D::render()
 {
+	glClearColor(0.3f, 0.8f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
+	sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
 }
 
-void OpenGLRenderer2D::draw_texture(Texture2D& texture, vec2 position, float rotation)
-{
-    
-}
 
 void OpenGLRenderer2D::window_size_callback(int width, int height)
 {

@@ -71,14 +71,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>external;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\debug$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>external;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\release$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
@@ -86,14 +86,14 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>external;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>external;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
@@ -194,6 +194,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\gl.c" />
+    <ClCompile Include="external\imgui\imgui.cpp" />
+    <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="external\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="external\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\OpenGL\SpriteRenderer.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
@@ -216,6 +225,16 @@
     <ClInclude Include="external\entt.hpp" />
     <ClInclude Include="external\glad\gl.h" />
     <ClInclude Include="external\glad\vulkan.h" />
+    <ClInclude Include="external\imgui\imconfig.h" />
+    <ClInclude Include="external\imgui\imgui.h" />
+    <ClInclude Include="external\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="external\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="external\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="external\imgui\imgui_internal.h" />
+    <ClInclude Include="external\imgui\imgui_stdlib.h" />
+    <ClInclude Include="external\imgui\imstb_rectpack.h" />
+    <ClInclude Include="external\imgui\imstb_textedit.h" />
+    <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\SOIL\image_DXT.h" />
     <ClInclude Include="external\SOIL\image_helper.h" />
     <ClInclude Include="external\SOIL\SOIL.h" />
@@ -240,6 +259,7 @@
     <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\Script.h" />
     <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\SpriteRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\box2d.lib" />
@@ -254,7 +274,7 @@
     <None Include="shaders\sprite.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\WarriorsGame\assets\art\tree.png" />
+    <Image Include="catgreyidle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,9 +2,9 @@
 #define OPENGLRENDERER2D_H
 
 #include "Window.h"
-
+#include "OdisMath.h"
 #include "ResourceManager.h"
-#include <OdisMath.h>
+#include "SpriteRenderer.h"
 
 namespace OdisEngine
 {
@@ -13,10 +13,12 @@ namespace OdisEngine
 	public:
 		OpenGLRenderer2D(Window& window, ResourceManager& resource_manager);
 
-		void draw_texture(Texture2D& texture, vec2 position);
-		void draw_texture(Texture2D& texture, vec2 position, float rotation);
+		void render();
+
 	private:
 		ResourceManager* resource_manager;
+
+		SpriteRenderer* sprite_renderer;
 
 		void window_size_callback(int width, int height);
 	};

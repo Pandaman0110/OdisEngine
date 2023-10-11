@@ -14,13 +14,13 @@ class ResourceManager
 public:
     ResourceManager() {};
 
-    GLSLShader load_shader(const char* v_shader_file, const char* f_shader_file, const char* g_shader_file, std::string name);
+    GLSLShader& load_shader(const char* v_shader_file, const char* f_shader_file, const char* g_shader_file, std::string name);
     // retrieves a stored sader
-    GLSLShader get_shader(std::string name);
+    GLSLShader& get_shader(std::string name);
     // loads (and generates) a texture from file
-    Texture2D load_texture(const char* file, bool alpha, std::string name);
+    Texture2D& load_texture(const char* file, bool alpha, std::string name);
     // retrieves a stored texture
-    Texture2D get_texture(std::string name);
+    Texture2D& get_texture(std::string name);
     // properly de-allocates all loaded resources
     void clear();
 private:
