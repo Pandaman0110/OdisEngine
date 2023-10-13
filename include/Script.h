@@ -10,6 +10,8 @@
 const std::string script_debug_path = "csharp/Debug/net6.0/";
 const std::string script_release_path = "csharp/Release/net6.0/";
 
+#include "Input.h"
+
 class Script
 {
 public:

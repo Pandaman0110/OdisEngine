@@ -48,7 +48,9 @@ namespace OdisEngine
 
 		int should_close();
 		void terminate();
-		void end_frame();
+
+		void swap_buffers();
+		void poll();
 
 		inline int get_monitor_width() const { return monitor_width; };
 		inline int get_monitor_height() const { return monitor_height; };

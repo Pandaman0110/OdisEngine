@@ -71,14 +71,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\debug$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
     <LibraryPath>external;mono\release$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
@@ -86,14 +86,14 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
     <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
@@ -202,6 +202,7 @@
     <ClCompile Include="external\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="ScriptManager.cpp" />
     <ClCompile Include="src\OpenGL\SpriteRenderer.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Script.cpp" />
@@ -260,6 +261,13 @@
     <ClInclude Include="include\Script.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
+    <ClInclude Include="lua\lua\lauxlib.h" />
+    <ClInclude Include="lua\lua\lua.h" />
+    <ClInclude Include="lua\lua\luaconf.h" />
+    <ClInclude Include="lua\lua\luajit.h" />
+    <ClInclude Include="lua\lua\lualib.h" />
+    <ClInclude Include="include\Components\Transform.h" />
+    <ClInclude Include="include\Components\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\box2d.lib" />
@@ -270,6 +278,29 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="hello.lua" />
+    <None Include="lua\lua51.dll" />
+    <None Include="lua\luajit.exe" />
+    <None Include="lua\lua\jit\.gitignore" />
+    <None Include="lua\lua\jit\bc.lua" />
+    <None Include="lua\lua\jit\bcsave.lua" />
+    <None Include="lua\lua\jit\dis_arm.lua" />
+    <None Include="lua\lua\jit\dis_arm64.lua" />
+    <None Include="lua\lua\jit\dis_arm64be.lua" />
+    <None Include="lua\lua\jit\dis_mips.lua" />
+    <None Include="lua\lua\jit\dis_mips64.lua" />
+    <None Include="lua\lua\jit\dis_mips64el.lua" />
+    <None Include="lua\lua\jit\dis_mips64r6.lua" />
+    <None Include="lua\lua\jit\dis_mips64r6el.lua" />
+    <None Include="lua\lua\jit\dis_mipsel.lua" />
+    <None Include="lua\lua\jit\dis_ppc.lua" />
+    <None Include="lua\lua\jit\dis_x64.lua" />
+    <None Include="lua\lua\jit\dis_x86.lua" />
+    <None Include="lua\lua\jit\dump.lua" />
+    <None Include="lua\lua\jit\p.lua" />
+    <None Include="lua\lua\jit\v.lua" />
+    <None Include="lua\lua\jit\vmdef.lua" />
+    <None Include="lua\lua\jit\zone.lua" />
     <None Include="shaders\sprite.frag" />
     <None Include="shaders\sprite.vert" />
   </ItemGroup>

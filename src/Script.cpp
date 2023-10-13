@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+using namespace OdisEngine;
+
 Script::Script()
 {
 	mono_set_dirs("Mono/lib", "Mono/etc");
@@ -25,10 +27,8 @@ Script::Script()
     mono_assembly = load_assembly_from_file(script_debug_path + "OdisEngine.dll");
     print_assembly_types(mono_assembly);
     
-    MonoObject* test = instantiate_class("Game", "CumNuggets");
+    MonoObject* test = instantiate_class("OdisEngine", "Game");
     call_mono_method(test, "print_float_var");
-
-
 }
 
 MonoClass* Script::get_class_in_assembly(MonoAssembly* assembly, const std::string& name_space, const std::string& name)
@@ -47,7 +47,7 @@ MonoClass* Script::get_class_in_assembly(MonoAssembly* assembly, const std::stri
 
 MonoObject* Script::instantiate_class(const std::string& name_space, const std::string& name)
 {
-    MonoClass* class_instance = get_class_in_assembly(mono_assembly, "OdisEngine", "CumNugget");
+    MonoClass* class_instance = get_class_in_assembly(mono_assembly, name_space, name);
 
     MonoObject* instance = mono_object_new(root_domain, class_instance);
 

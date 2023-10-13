@@ -136,12 +136,12 @@ void Window::terminate()
 	glfwTerminate();
 }
 
-void Window::end_frame()
+void Window::swap_buffers()
 {
-	//swap the buffers 
 	glfwSwapBuffers(window);
-
-	//poll window events
+}
+void Window::poll()
+{
 	glfwPollEvents();
 }
 

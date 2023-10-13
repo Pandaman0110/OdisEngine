@@ -21,7 +21,6 @@ OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_man
 
     auto &text = this->resource_manager->load_texture("catgreyidle.png", true, "cat");
 
-	std::cout << text.ID << std::endl;
 }
 
 void OpenGLRenderer2D::render()
