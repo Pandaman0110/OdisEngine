@@ -13,6 +13,8 @@ using namespace OdisEngine;
 
 #include "World.h"
 
+#include <entt.hpp>
+
 int main()
 {
     Window window(1920, 1080, "OdisEngine", true, RenderAPI::OpenGL);

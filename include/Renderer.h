@@ -9,7 +9,7 @@ namespace OdisEngine
 	class Renderer
 	{
 	public:
-		virtual void render(World world) = 0;
+		virtual void render(World& world) = 0;
 
 	private:
 	};

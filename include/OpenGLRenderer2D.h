@@ -8,6 +8,9 @@
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 
+
+#include <entt.hpp>
+
 namespace OdisEngine
 {
 	class OpenGLRenderer2D : public Renderer
@@ -15,7 +18,7 @@ namespace OdisEngine
 	public:
 		OpenGLRenderer2D(Window& window, ResourceManager& resource_manager);
 
-		void render(World world) override;
+		void render(World& world) override;
 
 	private:
 		ResourceManager* resource_manager;
