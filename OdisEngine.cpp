@@ -11,18 +11,15 @@ using namespace OdisEngine;
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
 
+#include "World.h"
 
 int main()
 {
-
     Window window(1920, 1080, "OdisEngine", true, RenderAPI::OpenGL);
     ResourceManager resource_manager;
 
     OpenGLRenderer2D renderer(window, resource_manager);
-    //Renderer renderer = Renderer(window);
     Input input(window);
-    
-    //Script script;
 
     double delta_time = 0.0f;
     double last_frame_time = 0.0f;
@@ -32,6 +29,9 @@ int main()
 
     ImGui_ImplGlfw_InitForOpenGL(window.get_window_handle(), true);
     ImGui_ImplOpenGL3_Init();
+
+    World world;
+
 
     while (!window.should_close()) 
     {
@@ -46,7 +46,7 @@ int main()
         if (input.is_key_pressed(Key::KEY_ESCAPE))
             break;
 
-        renderer.render();
+        renderer.render(world);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

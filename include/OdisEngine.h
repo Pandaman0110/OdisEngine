@@ -6,6 +6,5 @@
 #include "Renderer.h"
 #include "OpenGLRenderer2D.h"
 #include "Input.h"
-#include "Script.h"
 
 #endif

@@ -86,15 +86,15 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
-    <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
+    <IncludePath>external;include;lua;$(IncludePath)</IncludePath>
+    <LibraryPath>external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
-    <LibraryPath>external\mono\lib;external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
+    <IncludePath>external;include;lua;$(IncludePath)</IncludePath>
+    <LibraryPath>external;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\Shanc\Desktop\OdisEngine\Mono\lib</LibraryPath>
     <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <SourcePath>$(VC_SourcePath);</SourcePath>
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
@@ -116,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;mono-2.0-sgen.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;mono-2.0-sgen.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -162,7 +162,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;mono-2.0-sgen.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -189,7 +189,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;mono-2.0-sgen.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -202,10 +202,7 @@
     <ClCompile Include="external\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="ScriptManager.cpp" />
     <ClCompile Include="src\OpenGL\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Sprite.cpp" />
-    <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\InputEvents\KeyboardInputEvent.cpp" />
     <ClCompile Include="src\OpenGL\OpenGLRenderer2D.cpp" />
@@ -217,10 +214,10 @@
     <ClCompile Include="OdisEngine.cpp" />
     <ClCompile Include="src\InputEvents\InputEvent.cpp" />
     <ClCompile Include="src\Input\InputMap.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="external\vulkan.c" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\entt.hpp" />
@@ -252,14 +249,11 @@
     <ClInclude Include="include\OdisMath.h" />
     <ClInclude Include="include\OdisEngine.h" />
     <ClInclude Include="include\Renderer.h" />
-    <ClInclude Include="include\Surface.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\OpenGLRenderer2D.h" />
     <ClInclude Include="include\Texture2D.h" />
     <ClInclude Include="include\ResourceManager.h" />
-    <ClInclude Include="include\Script.h" />
-    <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="lua\lua\lauxlib.h" />
     <ClInclude Include="lua\lua\lua.h" />
@@ -268,6 +262,7 @@
     <ClInclude Include="lua\lua\lualib.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\Components\Sprite.h" />
+    <ClInclude Include="include\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\box2d.lib" />

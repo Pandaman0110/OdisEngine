@@ -23,7 +23,7 @@ OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_man
 
 }
 
-void OpenGLRenderer2D::render()
+void OpenGLRenderer2D::render(World world)
 {
 	glClearColor(0.3f, 0.8f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);

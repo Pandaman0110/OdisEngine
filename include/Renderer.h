@@ -2,38 +2,17 @@
 #define RENDERER_H
 
 #include "Window.h"
+#include "World.h"
 
-namespace OdisEngine 
+namespace OdisEngine
 {
 	class Renderer
 	{
 	public:
-		Renderer(Window& window);
-
-		int swap_buffers();
-		void clear();
-
-		void termimate();
+		virtual void render(World world) = 0;
 
 	private:
-		uint16_t clear_view;
 	};
-
-	class Viewport
-	{
-	public:
-
-
-
-	private:
-
-
-	};
-
 }
-
-
-
-
 
 #endif
