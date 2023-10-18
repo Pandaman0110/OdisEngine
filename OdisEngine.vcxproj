@@ -27,26 +27,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -113,6 +113,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +163,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -187,6 +190,7 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -209,7 +213,7 @@
     <ClCompile Include="src\OpenGL\SpriteRenderer.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\InputEvents\KeyboardInputEvent.cpp" />
-    <ClCompile Include="src\OpenGL\OpenGLRenderer2D.cpp" />
+    <ClCompile Include="src\OpenGL\Renderer.cpp" />
     <ClCompile Include="src\OpenGL\GLSLShader.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Camera\Camera2D.cpp" />
@@ -221,7 +225,6 @@
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="external\vulkan.c" />
-    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\entt.hpp" />
@@ -246,16 +249,17 @@
     <ClInclude Include="external\stb_image.h" />
     <ClInclude Include="external\toml.hpp" />
     <ClInclude Include="external\vk_platform.h" />
+    <ClInclude Include="include\Components.h" />
+    <ClInclude Include="include\cum.h" />
     <ClInclude Include="include\GLSLShader.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\Keys.h" />
     <ClInclude Include="include\OdisMath.h" />
     <ClInclude Include="include\OdisEngine.h" />
-    <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\Input.h" />
-    <ClInclude Include="include\OpenGLRenderer2D.h" />
+    <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Texture2D.h" />
     <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
@@ -266,7 +270,6 @@
     <ClInclude Include="lua\lua\lualib.h" />
     <ClInclude Include="include\Components\Transform.h" />
     <ClInclude Include="include\Components\Sprite.h" />
-    <ClInclude Include="include\World.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\box2d.lib" />

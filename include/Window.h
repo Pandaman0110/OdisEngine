@@ -20,11 +20,6 @@
 
 #include "InputEvent.h"
 
-static void glfwErrorCallback(int error, const char* description)
-{
-	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
-}
-
 namespace OdisEngine 
 {
 	enum class RenderAPI
@@ -61,10 +56,11 @@ namespace OdisEngine
 		//
 
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-		void set_window_size_callback(std::function<void(int, int)> window_size_callback);
+		inline void set_window_size_callback(std::function<void(int, int)> callback) { Window::window_size_callback = callback; };
+
 
 		static void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		void set_keyboard_input_callback(std::function<void(KeyboardInputEvent)> keyboard_input_callback);
+		inline void set_keyboard_input_callback(std::function<void(KeyboardInputEvent) > callback) { Window::input_callback = callback; };
 
 		GLFWwindow* get_window_handle() const { return window; };
 

@@ -42,7 +42,7 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, Re
 	}
 
 	//window hinting, happens before window creation
-	this->window_setup(RenderAPI::OpenGL);
+	this->window_setup(render_api);
 
 	//actually creates the window
 	this->create_window(width, height, name, fullscreen_mode);
@@ -143,16 +143,6 @@ void Window::swap_buffers()
 void Window::poll()
 {
 	glfwPollEvents();
-}
-
-void Window::set_window_size_callback(std::function<void(int, int)> window_size_callback)
-{
-	Window::window_size_callback = window_size_callback;
-}
-
-void Window::set_keyboard_input_callback(std::function<void(KeyboardInputEvent) > keyboard_input_callback)
-{
-	Window::input_callback = keyboard_input_callback;
 }
 
 #if _WIN32

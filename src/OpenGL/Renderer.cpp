@@ -1,12 +1,12 @@
-#include "OpenGLRenderer2D.h"
+#include "Renderer.h"
 
 #include "glad/gl.h"
 
 using namespace OdisEngine;
 
-OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_manager) : resource_manager(&resource_manager)
+Renderer::Renderer(Window& window, ResourceManager& resource_manager) : resource_manager(&resource_manager)
 {
-	window.set_window_size_callback(std::bind(&OpenGLRenderer2D::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
+	window.set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
 	glViewport(0, 0, window.get_window_width(), window.get_window_height());
 
 	glEnable(GL_BLEND);
@@ -23,16 +23,16 @@ OpenGLRenderer2D::OpenGLRenderer2D(Window& window, ResourceManager& resource_man
 
 }
 
-void OpenGLRenderer2D::render(World& world)
-{
-	glClearColor(0.3f, 0.8f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+//void Renderer::render()
+//{
+	//glClearColor(0.3f, 0.8f, 1.0f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
-	sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
-}
+	//sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
+//}
 
 
-void OpenGLRenderer2D::window_size_callback(int width, int height)
+void Renderer::window_size_callback(int width, int height)
 {
 	glViewport(0, 0, width, height);
 }

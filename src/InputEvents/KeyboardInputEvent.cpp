@@ -2,7 +2,7 @@
 
 using namespace OdisEngine;
 
-KeyboardInputEvent::KeyboardInputEvent(Key key, KeyScancode key_scancode, bool pressed, KeyName key_name) : key(key), scancode(scancode), key_name(key_name)
+KeyboardInputEvent::KeyboardInputEvent(Key key, KeyScancode key_scancode, bool pressed, KeyName key_name) : key_code(key), scancode(key_scancode), key_name(key_name)
 {
 	this->pressed = pressed;
 }

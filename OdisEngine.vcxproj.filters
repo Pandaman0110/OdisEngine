@@ -42,7 +42,7 @@
     <ClCompile Include="src\InputEvents\KeyboardInputEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\OpenGL\OpenGLRenderer2D.cpp">
+    <ClCompile Include="src\OpenGL\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenGL\GLSLShader.cpp">
@@ -87,14 +87,8 @@
     <ClCompile Include="external\imgui\imgui_impl_glfw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -131,7 +125,7 @@
     <ClInclude Include="include\GLSLShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer2D.h">
+    <ClInclude Include="include\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Texture2D.h">
@@ -218,7 +212,10 @@
     <ClInclude Include="include\Components\Sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\World.h">
+    <ClInclude Include="include\Components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -255,7 +252,6 @@
     <None Include="lua\lua\jit\v.lua" />
     <None Include="lua\lua\jit\vmdef.lua" />
     <None Include="lua\lua\jit\zone.lua" />
-    <None Include="hello.lua" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="catgreyidle.png">
