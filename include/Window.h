@@ -58,9 +58,11 @@ namespace OdisEngine
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 		inline void set_window_size_callback(std::function<void(int, int)> callback) { Window::window_size_callback = callback; };
 
-
 		static void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		inline void set_keyboard_input_callback(std::function<void(KeyboardInputEvent) > callback) { Window::input_callback = callback; };
+		inline void set_keyboard_input_callback(std::function<void(KeyboardInputEvent)> callback) { Window::keyboard_callback = callback; };
+
+		static void mouse_button_input_callback(GLFWwindow* window, int button, int action, int mods);
+		inline void set_mouse_button_input_callback(std::function<void(MouseButtonInputEvent)> callback) { Window::mouse_button_callback = callback; };
 
 		GLFWwindow* get_window_handle() const { return window; };
 
@@ -75,7 +77,8 @@ namespace OdisEngine
 		static void error_callback(int error, const char* description);
 
 		static std::function<void(int, int)> window_size_callback;
-		static std::function<void(KeyboardInputEvent)> input_callback;
+		static std::function<void(KeyboardInputEvent)> keyboard_callback;
+		static std::function<void(MouseButtonInputEvent)> mouse_button_callback;
 
 		int monitor_width;
 		int monitor_height;

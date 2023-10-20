@@ -10,17 +10,10 @@
 
 #include <entt.hpp>
 
-#include "OdisEngine.h"
+#include "OdisEngine.hpp"
 #include "OdisMath.h"
 
 using namespace OdisEngine;
-
-/*
-void cum_system(Transform2D transform) 
-{
-    std::cout << transform << "\n"; 
-};
-*/
 
 int main()
 {
@@ -38,19 +31,9 @@ int main()
 
     ImGui_ImplGlfw_InitForOpenGL(window.get_window_handle(), true);
     ImGui_ImplOpenGL3_Init();
-
-    /*
-    World world;
-
-    auto entity_0 = world.create_entity();
-    auto entity_1 = world.create_entity();
-
-    world.assign<Transform2D>(entity_0);
     
-    world.update_system<Transform2D>(std::function<void(Transform2D)>(cum_system));
-    */
+   
 
- 
     while (!window.should_close()) 
     {
         current_frame_time = glfwGetTime();

@@ -39,9 +39,6 @@
     <ClCompile Include="external\gl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputEvents\KeyboardInputEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\OpenGL\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\cum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OdisEngine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,7 +5,8 @@
 using namespace OdisEngine;
 
 std::function<void(int, int)> Window::window_size_callback;
-std::function<void(KeyboardInputEvent)> Window::input_callback;
+std::function<void(KeyboardInputEvent)> Window::keyboard_callback;
+std::function<void(MouseButtonInputEvent)> Window::mouse_button_callback;
 
 void Window::error_callback(int error, const char* description)
 {
@@ -18,17 +19,27 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
 	window_size_callback(width, height);
 }
 
-//key is the 
 void Window::keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (action != 2)
 	{
 		Key key_num = static_cast<Key>(key);
 		KeyScancode key_scancode = static_cast<KeyScancode>(scancode);
-		KeyName key_name = (glfwGetKeyName(key, scancode) != NULL) ? glfwGetKeyName(key, scancode) : "UNKOWN";
+		std::string key_name { (glfwGetKeyName(key, scancode) != NULL) ? glfwGetKeyName(key, scancode) : "key_unknown" };
 		bool pressed = action;
 		
-		input_callback(KeyboardInputEvent(key_num, key_scancode, pressed, key_name));
+		keyboard_callback(KeyboardInputEvent(key_num, key_scancode, pressed, std::move(key_name)));
+	}
+}
+
+void Window::mouse_button_input_callback(GLFWwindow* window, int button_num, int action, int mods)
+{
+	if (action != 2)
+	{
+		MouseButton button = static_cast<MouseButton>(button_num);
+		bool pressed = action;
+
+		mouse_button_callback(MouseButtonInputEvent(button, pressed));
 	}
 }
 
@@ -62,6 +73,7 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, Re
 	glfwSetErrorCallback(error_callback);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, keyboard_input_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_input_callback);
 }
 
 void Window::window_setup(RenderAPI render_api)
