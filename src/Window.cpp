@@ -4,10 +4,6 @@
 
 using namespace OdisEngine;
 
-std::function<void(int, int)> Window::window_size_callback;
-std::function<void(KeyboardInputEvent)> Window::keyboard_callback;
-std::function<void(MouseButtonInputEvent)> Window::mouse_button_callback;
-
 void Window::error_callback(int error, const char* description)
 {
 	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
@@ -28,7 +24,7 @@ void Window::keyboard_input_callback(GLFWwindow* window, int key, int scancode, 
 		std::string key_name { (glfwGetKeyName(key, scancode) != NULL) ? glfwGetKeyName(key, scancode) : "key_unknown" };
 		bool pressed = action;
 		
-		keyboard_callback(KeyboardInputEvent(key_num, key_scancode, pressed, std::move(key_name)));
+		keyboard_callback(KeyboardInputEvent { key_num, key_scancode, pressed, key_name });
 	}
 }
 
@@ -39,7 +35,7 @@ void Window::mouse_button_input_callback(GLFWwindow* window, int button_num, int
 		MouseButton button = static_cast<MouseButton>(button_num);
 		bool pressed = action;
 
-		mouse_button_callback(MouseButtonInputEvent(button, pressed));
+		mouse_button_callback(MouseButtonInputEvent{ button, pressed });
 	}
 }
 

@@ -229,13 +229,18 @@
     <ClCompile Include="src\Camera\Camera3D.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="OdisEngine.cpp" />
-    <ClCompile Include="src\InputEvents\InputEvent.cpp" />
     <ClCompile Include="src\Input\InputMap.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="external\vulkan.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Color.h">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </ClInclude>
     <ClInclude Include="external\entt.hpp" />
     <ClInclude Include="external\glad\gl.h" />
     <ClInclude Include="external\glad\vulkan.h" />

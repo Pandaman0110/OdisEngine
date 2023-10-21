@@ -5,11 +5,43 @@
 
 using namespace OdisEngine;
 
+void Input::keyboard_input_callback(KeyboardInputEvent keyboard_input_event)
+{
+	if (keyboard_input_event.is_pressed())
+		keyboard_input_queue.push_back(keyboard_input_event);
+	else
+	{
+		for (size_t i = 0; i < keyboard_input_queue.size(); i++)
+		{
+			auto& input_event = keyboard_input_queue.at(i);
+			if (input_event == keyboard_input_event)
+				keyboard_input_queue.at(i) = keyboard_input_event;
+		}
+	};
+}
+
+void Input::mouse_button_input_callback(MouseButtonInputEvent mouse_button_input_event)
+{
+	if (mouse_button_input_event.is_pressed())
+		mouse_button_input_queue.push_back(mouse_button_input_event);
+	else
+	{
+		for (size_t i = 0; i < mouse_button_input_queue.size(); i++)
+		{
+			auto& input_event = mouse_button_input_queue.at(i);
+			if (input_event == mouse_button_input_event)
+				mouse_button_input_queue.at(i) = mouse_button_input_event;
+		}
+	}
+}
+
 Input::Input(Window& window)
 {
+	keyboard_input_queue = {};
+	mouse_button_input_queue = {};
+
 	window.set_keyboard_input_callback(std::bind(&Input::keyboard_input_callback, this, std::placeholders::_1));
 	window.set_mouse_button_input_callback(std::bind(&Input::mouse_button_input_callback, this, std::placeholders::_1));
-
 }
 
 
@@ -115,14 +147,13 @@ bool Input::is_mouse_button_down(MouseButton button) const
 	return false;
 }
 
-
-void Input::poll_inputs()
+void Input::poll_inputs(float dt)
 {
 	for (auto& input_event : keyboard_input_queue)
-		input_event++;
+		input_event.tick(dt);
 
 	for (auto& input_event : mouse_button_input_queue)
-		input_event++;
+		input_event.tick(dt);
 
 	keyboard_input_queue.erase(std::remove_if(keyboard_input_queue.begin(), keyboard_input_queue.end(),
 		[](KeyboardInputEvent input_event)
@@ -135,34 +166,4 @@ void Input::poll_inputs()
 		{
 			return input_event.expired();
 		}), mouse_button_input_queue.end());
-}
-
-void Input::keyboard_input_callback(KeyboardInputEvent&& keyboard_input_event)
-{
-	if (keyboard_input_event.is_pressed())
-		keyboard_input_queue.push_back(std::move(keyboard_input_event));
-	else
-	{
-		for (size_t i = 0; i < keyboard_input_queue.size(); i++)
-		{
-			auto &input_event = keyboard_input_queue.at(i);
-			if (input_event == keyboard_input_event)
-				keyboard_input_queue.at(i) = std::move(keyboard_input_event);
-		}
-	};
-}
-
-void Input::mouse_button_input_callback(MouseButtonInputEvent&& mouse_button_input_event)
-{
-	if (mouse_button_input_event.is_pressed())
-		mouse_button_input_queue.push_back(std::move(mouse_button_input_event));
-	else
-	{
-		for (size_t i = 0; i < mouse_button_input_queue.size(); i++)
-		{
-			auto& input_event = mouse_button_input_queue.at(i);
-			if (input_event == mouse_button_input_event)
-				mouse_button_input_queue.at(i) = std::move(mouse_button_input_event);
-		}
-	}
 }

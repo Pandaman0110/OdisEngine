@@ -7,31 +7,27 @@
 
 #include "Keys.h"
 
-//TODO change this to use seconds
-const int KEYDOWN_FRAMECOUNT = 5;
+const float SECONDS_UNTIL_HELD = 0.5f;
 
 namespace OdisEngine
 {
 	class InputEvent
 	{
 	public:
-		InputEvent();
-
-		InputEvent& operator++() { frames_held++; echo = true; return *this; };
-		InputEvent operator++(int) { InputEvent tmp(*this); operator++(); return *this; };
+		InputEvent() {};
 		
 		inline bool is_pressed() const {  return pressed == true and echo == false; };
-		inline bool is_down() const { return frames_held > KEYDOWN_FRAMECOUNT and echo != false; };
+		inline bool is_down() const { return time_held < SECONDS_UNTIL_HELD and echo != false; };
 		inline bool is_released() const { return pressed == false; };
 
-		inline bool expired() const { return is_released() and frames_held > 0; };
-
+		inline bool expired() const { return is_released() and time_held > 0; };
+		inline void tick(float dt) { time_held += dt; echo = true; };
 	protected:
 		bool pressed;
 
 	private:
 		bool echo = false;
-		uint16_t frames_held = 0;
+		float time_held = 0.0f;
 	};
 
 	class KeyboardInputEvent : public InputEvent
@@ -42,7 +38,7 @@ namespace OdisEngine
 		std::string key_name;
 
 	public:
-		KeyboardInputEvent(Key key_code, KeyScancode key_scancode, bool pressed, std::string&& key_name) : key_code(key_code), scancode(key_scancode), key_name(std::move(key_name))
+		KeyboardInputEvent(Key key_code, KeyScancode key_scancode, bool pressed, std::string key_name) : key_code(key_code), scancode(key_scancode), key_name(key_name)
 		{
 			this->pressed = pressed;
 		}
@@ -70,7 +66,6 @@ namespace OdisEngine
 		}
 
 		inline bool is(MouseButton button_num) const { return this->button_num == button_num; };
-
 		inline MouseButton get_key() const { return button_num; };
 	};
 	

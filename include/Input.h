@@ -51,14 +51,14 @@ namespace OdisEngine
 		bool is_mouse_button_released(MouseButton button) const;
 		bool is_mouse_button_down(MouseButton button) const;
 
-		void poll_inputs();
+		void poll_inputs(float dt);
 	private:
 		InputMap input_map;
-		std::vector<KeyboardInputEvent> keyboard_input_queue{};
-		std::vector<MouseButtonInputEvent> mouse_button_input_queue{};
+		std::vector<KeyboardInputEvent> keyboard_input_queue;
+		std::vector<MouseButtonInputEvent> mouse_button_input_queue;
 
-		void keyboard_input_callback(KeyboardInputEvent&& keyboard_input_event);
-		void mouse_button_input_callback(MouseButtonInputEvent&& mouse_button_input_event);
+		void keyboard_input_callback(KeyboardInputEvent input_event);
+		void mouse_button_input_callback(MouseButtonInputEvent input_event);
 	};
 
 }

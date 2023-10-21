@@ -25,13 +25,14 @@ Renderer::Renderer(Window& window, ResourceManager& resource_manager) : resource
 	*/
 }
 
-//void Renderer::render()
-//{
-	//glClearColor(0.3f, 0.8f, 1.0f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT);
+void Renderer::clear(Color color)
+{
+	glClearColor(color.r, color.g, color.b, color.a);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
 
-	//sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
-//}
+
+//sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
 
 
 void Renderer::window_size_callback(int width, int height)

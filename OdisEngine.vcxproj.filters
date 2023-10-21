@@ -45,9 +45,6 @@
     <ClCompile Include="src\OpenGL\GLSLShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputEvents\InputEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\OpenGL\Texture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OdisEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
