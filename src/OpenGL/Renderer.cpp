@@ -10,7 +10,6 @@ Renderer::Renderer(Window& window, ResourceManager& resource_manager) : resource
 	window.set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
 	glViewport(0, 0, window.get_window_width(), window.get_window_height());
 
-	/*
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -21,6 +20,7 @@ Renderer::Renderer(Window& window, ResourceManager& resource_manager) : resource
     this->resource_manager->get_shader("sprite").use().set_integer("image", 0);
     this->resource_manager->get_shader("sprite").set_matrix4("projection", projection);
 
+	/*
     auto &text = this->resource_manager->load_texture("catgreyidle.png", true, "cat");
 	*/
 }
@@ -31,8 +31,11 @@ void Renderer::clear(Color color)
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer::draw_texture(Texture2D& texture, vec2 position, float rotation)
+{
+	sprite_renderer->draw_texture(texture, position, rotation);
+}
 
-//sprite_renderer->draw_texture(resource_manager->get_texture("cat"), vec2(200.0f, 200.0f));
 
 
 void Renderer::window_size_callback(int width, int height)

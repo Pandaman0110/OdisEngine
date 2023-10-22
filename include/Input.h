@@ -57,8 +57,8 @@ namespace OdisEngine
 		std::vector<KeyboardInputEvent> keyboard_input_queue;
 		std::vector<MouseButtonInputEvent> mouse_button_input_queue;
 
-		void keyboard_input_callback(KeyboardInputEvent input_event);
-		void mouse_button_input_callback(MouseButtonInputEvent input_event);
+		void keyboard_input_callback(KeyboardInputEvent&& input_event);
+		void mouse_button_input_callback(MouseButtonInputEvent&& input_event);
 	};
 
 }

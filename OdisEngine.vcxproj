@@ -212,14 +212,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\gl.c" />
-    <ClCompile Include="external\imgui\imgui.cpp" />
-    <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="external\imgui\imgui_draw.cpp" />
-    <ClCompile Include="external\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="external\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="external\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="external\imgui\imgui_tables.cpp" />
-    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\OpenGL\SpriteRenderer.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\OpenGL\Renderer.cpp" />
@@ -244,16 +236,6 @@
     <ClInclude Include="external\entt.hpp" />
     <ClInclude Include="external\glad\gl.h" />
     <ClInclude Include="external\glad\vulkan.h" />
-    <ClInclude Include="external\imgui\imconfig.h" />
-    <ClInclude Include="external\imgui\imgui.h" />
-    <ClInclude Include="external\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="external\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="external\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="external\imgui\imgui_internal.h" />
-    <ClInclude Include="external\imgui\imgui_stdlib.h" />
-    <ClInclude Include="external\imgui\imstb_rectpack.h" />
-    <ClInclude Include="external\imgui\imstb_textedit.h" />
-    <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\SOIL\image_DXT.h" />
     <ClInclude Include="external\SOIL\image_helper.h" />
     <ClInclude Include="external\SOIL\SOIL.h" />
@@ -261,7 +243,6 @@
     <ClInclude Include="external\SOIL\stbi_DDS_aug_c.h" />
     <ClInclude Include="external\SOIL\stb_image_aug.h" />
     <ClInclude Include="external\stb_image.h" />
-    <ClInclude Include="external\toml.hpp" />
     <ClInclude Include="external\vk_platform.h" />
     <ClInclude Include="include\Components.h" />
     <ClInclude Include="include\cum.h" />
@@ -347,7 +328,6 @@
     <ClInclude Include="include\Components\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="external\box2d.lib" />
     <Library Include="external\glfw3.lib" />
     <Library Include="external\SOIL_debug.lib" />
     <Library Include="external\SOIL_release.lib" />
@@ -377,8 +357,18 @@
     <None Include="lua\lua\jit\v.lua" />
     <None Include="lua\lua\jit\vmdef.lua" />
     <None Include="lua\lua\jit\zone.lua" />
-    <None Include="shaders\sprite.frag" />
-    <None Include="shaders\sprite.vert" />
+    <None Include="shaders\sprite.frag">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="shaders\sprite.vert">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="catgreyidle.png" />

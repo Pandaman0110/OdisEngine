@@ -11,7 +11,6 @@ public:
 	SpriteRenderer(GLSLShader& shader);
 	~SpriteRenderer();
 
-	void draw_texture(Texture2D& texture, vec2 position);
 	void draw_texture(Texture2D& texture, vec2 position, float rotation);
 private:
 	GLSLShader shader;

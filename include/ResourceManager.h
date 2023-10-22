@@ -7,7 +7,7 @@
 #include "Texture2d.h"
 #include "GLSLShader.h"
 
-const std::string shader_path = "shaders/";
+
 
 namespace OdisEngine
 {
@@ -28,6 +28,8 @@ namespace OdisEngine
     private:
         std::map<std::string, GLSLShader> shaders;
         std::map<std::string, Texture2D> textures;
+
+        std::string shader_path = "lib/shaders/";
 
         // loads and generates a shader from file
         GLSLShader load_shader_from_file(const char* v_shader_file, const char* f_shader_file, const char* g_shader_file = nullptr);

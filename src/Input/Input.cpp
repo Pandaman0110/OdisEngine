@@ -5,7 +5,7 @@
 
 using namespace OdisEngine;
 
-void Input::keyboard_input_callback(KeyboardInputEvent keyboard_input_event)
+void Input::keyboard_input_callback(KeyboardInputEvent&& keyboard_input_event)
 {
 	if (keyboard_input_event.is_pressed())
 		keyboard_input_queue.push_back(keyboard_input_event);
@@ -20,7 +20,7 @@ void Input::keyboard_input_callback(KeyboardInputEvent keyboard_input_event)
 	};
 }
 
-void Input::mouse_button_input_callback(MouseButtonInputEvent mouse_button_input_event)
+void Input::mouse_button_input_callback(MouseButtonInputEvent&& mouse_button_input_event)
 {
 	if (mouse_button_input_event.is_pressed())
 		mouse_button_input_queue.push_back(mouse_button_input_event);
