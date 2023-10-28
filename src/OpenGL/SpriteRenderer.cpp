@@ -1,12 +1,14 @@
 #include "SpriteRenderer.h"
 
+#include <array>
+
 #include "glad/gl.h"
 
 SpriteRenderer::SpriteRenderer(GLSLShader& shader) : shader(shader)
 {
     // configure VAO/VBO
     unsigned int vbo;
-    float vertices[] = {
+    float vertices[]{
         // pos      // tex
         0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 0.0f, 1.0f, 0.0f,
@@ -58,4 +60,8 @@ void SpriteRenderer::draw_texture(Texture2D& texture, vec2 position, float rotat
     glBindVertexArray(this->quad_vao);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+}
+
+void SpriteRenderer::draw()
+{
 }

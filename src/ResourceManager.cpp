@@ -23,7 +23,9 @@ GLSLShader& ResourceManager::get_shader(std::string name)
 Texture2D& ResourceManager::load_texture(const char* file, bool alpha, std::string name)
 {
     textures.insert({ name, load_texture_from_file(file, alpha) });
-    return textures.at(name);
+    auto& text = textures.at(name);
+    text.name = name ;
+    return text;
 }
 
 Texture2D& ResourceManager::get_texture(std::string name)

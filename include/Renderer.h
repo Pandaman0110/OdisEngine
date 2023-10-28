@@ -22,6 +22,8 @@ namespace OdisEngine
 
 		void clear(Color color);
 		void draw_texture(Texture2D& texture, vec2 position = { 0, 0 }, float rotation = 0.0f);
+
+		void draw();
 	};
 
 }

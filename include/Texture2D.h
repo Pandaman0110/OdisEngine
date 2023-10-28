@@ -1,6 +1,8 @@
 #ifndef TEXTURE2D_H
 #define TEXTURE2D_H
 
+#include <string>
+
 #include <glad/gl.h>
 
 // Texture2D is able to store and configure a texture in OpenGL.
@@ -20,6 +22,8 @@ public:
     int wrap_t; // wrapping mode on T axis
     int filter_min; // filtering mode if texture pixels < screen pixels
     int filter_max; // filtering mode if texture pixels > screen pixels
+    //name
+    std::string name;
     // constructor (sets default texture modes)
     Texture2D();
     // generates texture from image data

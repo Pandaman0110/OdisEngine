@@ -36,6 +36,11 @@ void Renderer::draw_texture(Texture2D& texture, vec2 position, float rotation)
 	sprite_renderer->draw_texture(texture, position, rotation);
 }
 
+void Renderer::draw()
+{
+	sprite_renderer->draw();
+}
+
 
 
 void Renderer::window_size_callback(int width, int height)

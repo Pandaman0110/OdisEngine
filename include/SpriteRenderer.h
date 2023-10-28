@@ -12,6 +12,8 @@ public:
 	~SpriteRenderer();
 
 	void draw_texture(Texture2D& texture, vec2 position, float rotation);
+
+	void draw();
 private:
 	GLSLShader shader;
 	unsigned int quad_vao;
