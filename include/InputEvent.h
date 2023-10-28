@@ -7,7 +7,7 @@
 
 #include "Keys.h"
 
-const float SECONDS_UNTIL_HELD = 0.5f;
+const float SECONDS_UNTIL_HELD = 0.1f;
 
 namespace OdisEngine
 {
@@ -16,12 +16,12 @@ namespace OdisEngine
 	public:
 		InputEvent() {};
 		
-		inline bool is_pressed() const {  return pressed == true and echo == false; };
-		inline bool is_down() const { return time_held < SECONDS_UNTIL_HELD and echo != false; };
+		inline bool is_pressed() const {  return (pressed == true and echo == false); };
+		inline bool is_down() const { return ((SECONDS_UNTIL_HELD < time_held) and echo == true); };
 		inline bool is_released() const { return pressed == false; };
 
 		inline bool expired() const { return is_released() and time_held > 0; };
-		inline void tick(float dt) { time_held += dt; echo = true; };
+		inline void tick(float dt) { std::cout<<time_held<<"\n";  time_held += dt; echo = true; };
 	protected:
 		bool pressed;
 
