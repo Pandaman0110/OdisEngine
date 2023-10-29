@@ -1,7 +1,5 @@
 #include "SpriteRenderer.h"
 
-#include <array>
-
 #include "glad/gl.h"
 
 SpriteRenderer::SpriteRenderer(GLSLShader& shader) : shader(shader)

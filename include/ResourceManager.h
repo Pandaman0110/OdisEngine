@@ -4,35 +4,41 @@
 #include <map>
 #include <string>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H  
+
 #include "Texture2d.h"
 #include "GLSLShader.h"
-
-
+#include "Font.h"
 
 namespace OdisEngine
 {
     class ResourceManager
     {
     public:
-        ResourceManager() {};
+        ResourceManager(std::string font_path);
 
-        GLSLShader& load_shader(const char* v_shader_file, const char* f_shader_file, const char* g_shader_file, std::string name);
+        GLSLShader& load_shader(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file, std::string name);
         GLSLShader& get_shader(std::string name);
-        Texture2D& load_texture(const char* file, bool alpha, std::string name);
-        Texture2D& get_texture(std::string name);
-        
-        // properly de-allocates all loaded resources
+        Texture2D& load_texture(std::string file_name, std::string name, bool alpha);
+        Texture2D& get_texture(std::string file_name);
+        Font& load_font(std::string file_name, std::string name, int h, int w = 0);
+        Font& get_font(std::string file_name, std::string name);
+     
         void clear();
     private:
         std::map<std::string, GLSLShader> shaders;
         std::map<std::string, Texture2D> textures;
+        std::map<std::string, Font> fonts;
 
         std::string shader_path = "lib/shaders/";
+        std::string font_path = "fonts/";
 
-        // loads and generates a shader from file
-        GLSLShader load_shader_from_file(const char* v_shader_file, const char* f_shader_file, const char* g_shader_file = nullptr);
-        // loads a single texture from file
-        Texture2D load_texture_from_file(const char* file, bool alpha);
+        FT_Library ft{};
+
+        GLSLShader load_shader_from_file(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file = nullptr);
+        Texture2D load_texture_from_file(std::string file_name, bool alpha);
+        Font load_font_from_file(std::string file_name, int width, int height);
     };
 }
 

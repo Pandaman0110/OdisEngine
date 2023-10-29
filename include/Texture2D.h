@@ -11,17 +11,17 @@ class Texture2D
 {
 public:
     // holds the ID of the texture object, used for all texture operations to reference to this particular texture
-    int ID;
+    unsigned int ID;
     // texture image dimensions
-    int width, height; // width and height of loaded image in pixels
+    unsigned int width, height; // width and height of loaded image in pixels
     // texture Format
-    int interal_format; // format of texture object
-    int image_format; // format of loaded image
+    unsigned int interal_format; // format of texture object
+    unsigned int image_format; // format of loaded image
     // texture configuration
-    int wrap_s; // wrapping mode on S axis
-    int wrap_t; // wrapping mode on T axis
-    int filter_min; // filtering mode if texture pixels < screen pixels
-    int filter_max; // filtering mode if texture pixels > screen pixels
+    unsigned int wrap_s; // wrapping mode on S axis
+    unsigned int wrap_t; // wrapping mode on T axis
+    unsigned int filter_min; // filtering mode if texture pixels < screen pixels
+    unsigned int filter_max; // filtering mode if texture pixels > screen pixels
     //name
     std::string name;
     // constructor (sets default texture modes)

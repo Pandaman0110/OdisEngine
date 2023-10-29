@@ -57,6 +57,9 @@
     <ClCompile Include="src\OpenGL\SpriteRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenGL\TextRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window.h">
@@ -161,6 +164,12 @@
     <ClInclude Include="include\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\glfw3.lib" />
@@ -194,6 +203,8 @@
     <None Include="lua\lua\jit\v.lua" />
     <None Include="lua\lua\jit\vmdef.lua" />
     <None Include="lua\lua\jit\zone.lua" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="catgreyidle.png">
