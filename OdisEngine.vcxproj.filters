@@ -60,6 +60,9 @@
     <ClCompile Include="src\OpenGL\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenGL\ShapeRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Window.h">
@@ -170,6 +173,15 @@
     <ClInclude Include="include\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ShapeRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shapes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\glfw3.lib" />
@@ -205,6 +217,8 @@
     <None Include="lua\lua\jit\zone.lua" />
     <None Include="shaders\text.frag" />
     <None Include="shaders\text.vert" />
+    <None Include="shaders\shape.frag" />
+    <None Include="shaders\shape.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="catgreyidle.png">

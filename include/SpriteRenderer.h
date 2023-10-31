@@ -4,22 +4,26 @@
 #include "Texture2D.h"
 #include "GLSLShader.h"
 #include "OdisMath.h"
+#include "Mesh.h"
 
-class SpriteRenderer
+namespace OdisEngine
 {
+	class SpriteRenderer
+	{
 
-private:
-	GLSLShader shader;
-	unsigned int quad_vao;
+	private:
+		GLSLShader shader;
+		unsigned int quad_vao;
 
-public:
-	SpriteRenderer() {};
-	SpriteRenderer(GLSLShader& shader);
-	~SpriteRenderer();
+	public:
+		SpriteRenderer() {};
+		SpriteRenderer(GLSLShader& shader);
+		~SpriteRenderer();
 
-	void draw_texture(Texture2D& texture, vec2 position, float rotation);
+		void draw_texture(Texture2D& texture, vec2 position, float rotation);
 
-	void draw();
-};
+		void draw();
+	};
+}
 
 #endif
