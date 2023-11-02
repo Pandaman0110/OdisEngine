@@ -1,6 +1,7 @@
 #include "ShapeRenderer.h"
 
 #include <array>
+#include <iostream>
 
 #include <glad/gl.h>
 
@@ -24,8 +25,11 @@ ShapeRenderer::ShapeRenderer(GLSLShader& shader) : shader(shader)
         1, 2, 3
     };
 
-    //Mesh mesh { rect_vertices, rect_indices };
+    mesh.set_vertices(rect_vertices, 3);
+    mesh.set_indices(rect_indices);
+    mesh.bind();
 
+    /*
     unsigned int vbo, ebo;
 
     //ready 
@@ -49,6 +53,7 @@ ShapeRenderer::ShapeRenderer(GLSLShader& shader) : shader(shader)
     //clean
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    */
 }
 
 ShapeRenderer::~ShapeRenderer()
@@ -73,7 +78,10 @@ void ShapeRenderer::draw_rect(vec2 pos, vec2 size, float rotation, ColorRGB colo
     shader.set_matrix4("model", model);
     shader.set_vector4f("shape_color", vec4(color.r, color.g, color.b, alpha));
 
+    mesh.draw();
+    /*
     glBindVertexArray(this->vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    */
 }

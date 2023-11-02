@@ -182,11 +182,14 @@
     <ClInclude Include="include\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="external\ft2build.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\glfw3.lib" />
-    <Library Include="external\SOIL_debug.lib" />
     <Library Include="external\SOIL_release.lib" />
+    <Library Include="external\freetype.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

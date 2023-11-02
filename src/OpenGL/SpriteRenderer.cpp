@@ -19,6 +19,8 @@ SpriteRenderer::SpriteRenderer(GLSLShader& shader) : shader(shader)
         1.0f, 0.0f, 1.0f, 0.0f
     };
 
+    //mesh.set_vertices();
+
     glGenVertexArrays(1, &this->quad_vao);
     glGenBuffers(1, &vbo);
 

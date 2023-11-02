@@ -30,27 +30,27 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -79,6 +79,7 @@
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <TargetName>$(ProjectName)Debug</TargetName>
     <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>rnal/imgui;include;Mono/include/mono-2.0;lua;$(IncludePath)</IncludePath>
@@ -89,6 +90,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)Release</TargetName>
     <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>external;include;lua;$(IncludePath)</IncludePath>
@@ -99,6 +101,7 @@
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <TargetName>$(ProjectName)Debug</TargetName>
     <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>external;include;lua;$(IncludePath)</IncludePath>
@@ -109,6 +112,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)Release</TargetName>
     <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,11 +128,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;freetype.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,13 +155,14 @@
       <ExceptionHandling>false</ExceptionHandling>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;freetype.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -174,11 +180,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;freetype.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,13 +208,14 @@
       <ExceptionHandling>false</ExceptionHandling>
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;SOIL_release.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);glfw3.lib;opengl32.lib;kernel32.lib;gdi32.lib;freetype.lib;SOIL_release.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -229,6 +237,7 @@
     <ClCompile Include="external\vulkan.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\ft2build.h" />
     <ClInclude Include="include\Font.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
@@ -360,8 +369,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="external\freetype.lib" />
     <Library Include="external\glfw3.lib" />
-    <Library Include="external\SOIL_debug.lib" />
     <Library Include="external\SOIL_release.lib" />
   </ItemGroup>
   <ItemGroup>

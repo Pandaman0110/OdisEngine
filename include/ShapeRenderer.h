@@ -15,6 +15,7 @@ namespace OdisEngine
 	private:
 		GLSLShader shader;
 		unsigned int vao;
+		Mesh mesh{};
 
 	public:
 		ShapeRenderer() {};

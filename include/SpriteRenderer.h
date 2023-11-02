@@ -15,6 +15,8 @@ namespace OdisEngine
 		GLSLShader shader;
 		unsigned int quad_vao;
 
+		//Mesh mesh{};
+
 	public:
 		SpriteRenderer() {};
 		SpriteRenderer(GLSLShader& shader);

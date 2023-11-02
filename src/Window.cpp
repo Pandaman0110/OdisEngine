@@ -148,6 +148,7 @@ void Window::swap_buffers()
 {
 	glfwSwapBuffers(window);
 }
+
 void Window::poll()
 {
 	glfwPollEvents();
