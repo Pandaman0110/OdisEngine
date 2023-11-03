@@ -21,7 +21,7 @@ namespace OdisEngine
 
 		void load_font(Font& font);
 
-		void draw_text(std::string, vec2 pos = {0.0f, 0.0f}, float scale = 1.0f, Color color = {1.0f, 1.0f, 1.0f});
+		void draw_text(std::string, glm::vec2 pos = {0.0f, 0.0f}, float scale = 1.0f, Color color = {1.0f, 1.0f, 1.0f});
 
 		void draw();
 	};

@@ -36,7 +36,7 @@ namespace OdisEngine
 
         FT_Library ft{};
 
-        GLSLShader load_shader_from_file(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file = nullptr);
+        GLSLShader load_shader_from_file(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file = "");
         Texture2D load_texture_from_file(std::string file_name, bool alpha);
         Font load_font_from_file(std::string file_name, int width, int height);
     };

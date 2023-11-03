@@ -178,8 +178,8 @@ Font ResourceManager::load_font_from_file(std::string file_name, int height, int
         // now store character for later use
         Character character = {
             texture,
-            ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)
         };
         font.characters.at(c) = character;

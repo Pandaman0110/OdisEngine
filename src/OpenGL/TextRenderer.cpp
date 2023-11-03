@@ -27,10 +27,10 @@ TextRenderer::~TextRenderer()
     glDeleteVertexArrays(1, &this->vao);
 }
 
-void TextRenderer::draw_text(std::string text, vec2 pos, float scale, Color color)
+void TextRenderer::draw_text(std::string text, glm::vec2 pos, float scale, Color color)
 {
     this->shader.use();
-    this->shader.set_vector3f("text_color", vec3{ color.r, color.g, color.b });
+    this->shader.set_vector3f("text_color", glm::vec3{ color.r, color.g, color.b });
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(this->vao);
 

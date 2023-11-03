@@ -16,14 +16,14 @@ namespace OdisEngine
 	struct Character
 	{
 		unsigned int texture_id;
-		ivec2 size;
-		ivec2 bearing;
+		glm::ivec2 size;
+		glm::ivec2 bearing;
 		unsigned int advance;
 	};
 
 	struct Font
 	{
-		ivec2 size;
+		glm::ivec2 size;
 		std::string name;
 		std::array<Character, NUM_FONT_CHARACTERS> characters;
 	};

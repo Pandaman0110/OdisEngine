@@ -13,18 +13,50 @@ namespace OdisEngine
 
 	private:
 		GLSLShader shader;
-		unsigned int quad_vao;
-
-		//Mesh mesh{};
+		Mesh mesh{};
 
 	public:
 		SpriteRenderer() {};
-		SpriteRenderer(GLSLShader& shader);
-		~SpriteRenderer();
+		
+		SpriteRenderer(GLSLShader& shader) : shader(shader)
+		{
+			std::vector<float> vertices
+			{
+				0.0f, 1.0f, 0.0f, 1.0f,
+				1.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 0.0f,
 
-		void draw_texture(Texture2D& texture, vec2 position, float rotation);
+				0.0f, 1.0f, 0.0f, 1.0f,
+				1.0f, 1.0f, 1.0f, 1.0f,
+				1.0f, 0.0f, 1.0f, 0.0f
+			};
 
-		void draw();
+			mesh.set_vertices(vertices, 4);
+		};
+
+		void draw_texture(Texture2D& texture, glm::vec2 position, float rotation)
+		{
+			shader.use();
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(position, 0.0f));
+
+			model = glm::translate(model, glm::vec3(0.5f * texture.width, 0.5f * texture.height, 0.0f));
+			model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::translate(model, glm::vec3(-0.5f * texture.width, -0.5f * texture.height, 0.0f));
+
+			model = glm::scale(model, glm::vec3(texture.width, texture.height, 1.0f));
+
+			shader.set_matrix4("model", model);
+			shader.set_vector3f("sprite_color", glm::vec3(1.0f, 1.0f, 1.0f));
+
+			glActiveTexture(GL_TEXTURE0);
+			texture.bind();
+
+			mesh.draw();
+		}
+
+		void draw() {};
 	};
 }
 

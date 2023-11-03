@@ -13,6 +13,4 @@ concept VectorType= requires (T component)
 	{ component.y };
 };
 
-using namespace glm;
-
 #endif

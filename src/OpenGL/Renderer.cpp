@@ -17,7 +17,7 @@ Renderer::Renderer(Window& window, ResourceManager& resource_manager)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	mat4 projection = ortho(0.0f, static_cast<float>(window.get_window_width()), static_cast<float>(window.get_window_height()), 0.0f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window.get_window_width()), static_cast<float>(window.get_window_height()), 0.0f, -1.0f, 1.0f);
 	//setup sprite renderer
 	sprite_renderer = std::make_unique<SpriteRenderer>(resource_manager.load_shader("sprite.vert", "sprite.frag", "", "sprite"));
 	auto& sprite_shader = resource_manager.get_shader("sprite");
@@ -34,20 +34,12 @@ Renderer::Renderer(Window& window, ResourceManager& resource_manager)
 	shape_shader.use().set_matrix4("projection", projection);
 }
 
-
-
-void Renderer::draw_texture(Texture2D& texture, vec2 position, float rotation)
-{
-	sprite_renderer->draw_texture(texture, position, rotation);
-}
-
-
 void Renderer::set_font(Font& font)
 {
 	text_renderer->load_font(font);
 }
 
-void Renderer::draw_text(std::string text, vec2 pos, float scale, Color color)
+void Renderer::draw_text(std::string text, glm::vec2 pos, float scale, Color color)
 {
 	text_renderer->draw_text(text, pos, scale, color);
 }
