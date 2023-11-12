@@ -3,7 +3,7 @@
 
 #include "Texture2D.h"
 #include "GLSLShader.h"
-#include "OdisMath.h"
+#include "utility/OdisMath.h"
 #include "Mesh.h"
 
 namespace OdisEngine
@@ -34,12 +34,13 @@ namespace OdisEngine
 			mesh.set_vertices(vertices, 4);
 		};
 
-		void draw_texture(Texture2D& texture, glm::vec2 position, float rotation)
+		template <IntVectorType T>
+		void draw_texture(Texture2D& texture, T position, float rotation)
 		{
 			shader.use();
 
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(position, 0.0f));
+			model = glm::translate(model, glm::vec3(position.x, position.y, 0.0f));
 
 			model = glm::translate(model, glm::vec3(0.5f * texture.width, 0.5f * texture.height, 0.0f));
 			model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));

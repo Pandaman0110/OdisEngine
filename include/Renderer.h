@@ -1,19 +1,50 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "Window.h"
-#include "OdisMath.h"
+#include <memory>
+#include <concepts>
+#include <type_traits>
 
+#include "glad/gl.h"
+
+#include "Window.h"
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 #include "TextRenderer.h"
 #include "ShapeRenderer.h"
 
+#include "utility/OdisMath.h"
 #include "Color.h"
 #include "Shapes.h"
+#include "Camera.h"
 
 namespace OdisEngine
 {
+	template <VectorType T = glm::ivec2>
+	T calculate_res_scale(T game_resolution, T target_resolution)
+	{
+		return T { target_resolution.x / game_resolution.x, target_resolution.y / game_resolution.y };
+	}
+
+	template <IntVectorType T = glm::ivec2>
+	T calculate_resolution(T game_resolution, T target_resolution)
+	{
+		T scale = this->calculate_scale(game_resolution, target_resolution);
+		return T{ game_resolution.x * scale.x, game_resolution.y * scale.y };
+	}
+
+	template <IntVectorType T = glm::ivec2>
+	T calculate_offset(T game_resolution, T screen_size) 
+	{
+		return T{ (screen_size.x - game_resolution.x) / 2, (screen_size.y - game_resolution.y) / 2 };
+	}
+
+	enum class ScaleMode
+	{
+		NORMAL,
+		INTEGER
+	};
+
 	class Renderer
 	{
 	private:
@@ -21,41 +52,153 @@ namespace OdisEngine
 		std::unique_ptr<TextRenderer> text_renderer;
 		std::unique_ptr<ShapeRenderer> shape_renderer;
 
-		void window_size_callback(int w, int h);
+		Camera2D camera;
+		glm::ivec2 game_resolution;
+		ScaleMode scale_mode;
+
+
+		void window_size_callback(int width, int height)
+		{
+			
+		}
+
+		void set_viewport(int offset_x, int offset_y, int width, int height)
+		{
+			glViewport(offset_x, offset_y, width, height);
+			std::cout << offset_x << " " << offset_y << " " << width << " " << height << std::endl;
+		}
+
+		template <IntVectorType T>
+		void set_viewport(T offset, T size)
+		{
+			set_viewport(offset.x, offset.y, size.x, size.y);
+		}
 
 	public:
-		Renderer(Window&, ResourceManager&);
+		Renderer(Window* window, ResourceManager* resource_manager, ScaleMode scale_mode = ScaleMode::NORMAL) : scale_mode(scale_mode)
+		{
+			window->set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
 
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//glm::ivec2 resolution = calculate_resolution( ,window.get_window_size())
+
+			glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window->get_window_width()), static_cast<float>(window->get_window_height()), 0.0f, -1.0f, 1.0f);
+
+			sprite_renderer = std::make_unique<SpriteRenderer>(resource_manager->load_shader("sprite.vert", "sprite.frag", "", "sprite"));
+			auto& sprite_shader = resource_manager->get_shader("sprite");
+			sprite_shader.use().set_integer("text", 0);
+			sprite_shader.set_matrix4("projection", projection);
+
+			text_renderer = std::make_unique<TextRenderer>(resource_manager->load_shader("text.vert", "text.frag", "", "text"));
+			auto& text_shader = resource_manager->get_shader("text");
+			text_shader.use().set_integer("text", 0);
+			text_shader.set_matrix4("projection", projection);
+
+			shape_renderer = std::make_unique<ShapeRenderer>(resource_manager->load_shader("shape.vert", "shape.frag", "", "shape"));
+			auto& shape_shader = resource_manager->get_shader("shape");
+			shape_shader.use().set_matrix4("projection", projection);
+		}
+
+		template <IntVectorType T = glm::ivec2>
+		void set_resolution(T game_resolution = { 0, 0 })
+		{
+			this->game_resolution.x = game_resolution.x;
+			this->game_resolution.y = game_resolution.y;
+		}
+		
+		void set_resolution(int width = 0, int height = 0)
+		{
+			this->game_resolution.x = width;
+			this->game_resolution.y = height;
+		}
+
+		void clear(float r, float g, float b, float a)
+		{
+			//disable z buf for 2D
+			glDisable(GL_DEPTH_TEST);
+			glClearColor(r, b, g, a);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
+		void clear(float r, float g, float b)
+		{
+			//????????????
+			clear(r, b, g, 1.0f);
+		}
+		void clear()
+		{
+			clear(1.0f, 1.0f, 1.0f, 1.0f);
+		}
 		template <ColorTypeRGB T>
-		void clear(T color = {1.0f, 1.0f, 1.0f}, float alpha = 1.0f)
+		void clear(T color)
 		{
-			glClearColor(color.r, color.g, color.b, alpha);
-			glClear(GL_COLOR_BUFFER_BIT);
-		};
-		inline void clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f)
+			clear(color.r, color.b, color.g, 1.0f);
+		}
+		template <ColorTypeRGB T>
+		void clear(T color, float a)
 		{
-			glClearColor(r, g, b, a);
-			glClear(GL_COLOR_BUFFER_BIT);
-		};
+			clear(color.r, color.b, color.g, a);
+		}
 
-		template <VectorType T1 = glm::vec2, VectorType T2 = glm::vec2, ColorTypeRGB T3 = ColorRGB>
-		void draw_rect(T1 pos, T2 size, T3 color = { 1.0f, 1.0f, 1.0f }, float rotation = 0.0f, float alpha = 1.0f)
+
+
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_rect(T1 pos, T1 size, T2 color)
+		{
+			draw_rect(pos, size, color, 0.0f, 1.0f);
+		}
+
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_rect(T1 pos, T1 size, T2 color, float rotation)
+		{
+			draw_rect(pos, size, color, rotation, 1.0f);
+		}
+
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_rect(T1 pos, T1 size, T2 color, float rotation, float alpha)
 		{
 			shape_renderer->draw_rect(pos, size, color, rotation, alpha);
 		}
 
 		//texture drawing
-		template <VectorType T1 = glm::vec2>
-		void draw_texture(Texture2D& texture, T1 position, float rotation = 0.0f)
+		template <IntVectorType T = glm::ivec2>
+		void draw_texture(Texture2D& texture, T position, float rotation = 0.0f)
 		{
 			sprite_renderer->draw_texture(texture, position, rotation);
 		}
 
-		//fonts and text
-		void draw_text(std::string text, glm::vec2 pos = {0.0f, 0.0f}, float scale = 1.0f, Color color = {0.0f, 0.0f, 0.0f});
-		void set_font(Font&);
+		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_text(std::string text, T1 pos)
+		{
+			draw_text(text, pos, T2{1.0f, 1.0f, 1.0f}, 1.0f);
+		}
 
-		void draw();
+		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_text(std::string text, T1 pos, T2 color)
+		{
+			draw_text(text, pos, color, 1.0f);
+		}
+
+		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		void draw_text(std::string text, T1 pos, T2 color, float scale)
+		{
+			text_renderer->draw_text(text, pos, color, scale);
+		}
+
+
+		void draw()
+		{
+			sprite_renderer->draw();
+			text_renderer->draw();
+		}
+
+
+
+		void set_font(Font& font)
+		{
+			text_renderer->load_font(font);
+		}
 	};
 
 }

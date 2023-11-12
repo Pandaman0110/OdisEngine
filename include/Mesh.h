@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <initializer_list>
 
-#include "OdisMath.h"
+#include "utility/OdisMath.h"
 
 namespace OdisEngine
 {
@@ -28,11 +28,9 @@ namespace OdisEngine
 		{
 			stride = std::accumulate(num_vertices.begin(), num_vertices.end(), 0);
 
-
 			int sum = 0;
 			for (auto num : num_vertices)
 			{
-
 				glEnableVertexAttribArray(current_attribute_num);
 				glVertexAttribPointer(current_attribute_num, num, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(stride * sizeof(float)), (void*)(sum * sizeof(float)));
 

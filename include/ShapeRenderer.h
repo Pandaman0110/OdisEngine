@@ -8,7 +8,7 @@
 
 #include "Texture2D.h"
 #include "GLSLShader.h"
-#include "OdisMath.h"
+#include "utility/OdisMath.h"
 #include "Color.h"
 #include "Mesh.h"
 
@@ -41,8 +41,8 @@ namespace OdisEngine
 			//mesh.set_indices(rect_indices);
 		}
 
-		template <VectorType T1, VectorType T2, ColorTypeRGB T3>
-		void draw_rect(T1 pos, T2 size, T3 color, float rotation, float alpha)
+		template <IntVectorType T1, ColorTypeRGB T2>
+		void draw_rect(T1 pos, T1 size, T2 color, float rotation, float alpha)
 		{
 			shader.use();
 

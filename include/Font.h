@@ -7,7 +7,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "OdisMath.h"
+#include "utility/OdisMath.h"
 
 namespace OdisEngine
 {

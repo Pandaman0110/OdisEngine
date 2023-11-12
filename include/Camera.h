@@ -1,54 +1,75 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "OdisMath.h"	
+#include <concepts>
+#include <type_traits>
+#include <utility>
 
-class Camera
+#include "utility/OdisMath.h"	
+
+namespace OdisEngine
 {
-public:
-	Camera();
+	class Camera
+	{
+	public:
+		Camera() {};
+		virtual ~Camera() = 0;
+		
+	};
 
-private:
+	class Camera2D
+	{
+	private:
+		glm::mat4 projection;
+		glm::mat4 view;
 
-};
+		glm::ivec2 position{ 0, 0 };
 
-class Camera2D : public Camera
-{
-public:	
-	Camera2D();
+		glm::ivec2 target{ 0, 0 };
+		float rotation = 0.0f;
+		float zoom = 1.0f;
+	public:
+		Camera2D() {};
 
-	glm::vec2 get_position() const { return position; };
-	float get_orientation() const { return orientation; };
+		template <IntVectorType T = glm::ivec2>
+		Camera2D(T target, float rotation, float zoom) : target(target), rotation(rotation), zoom(zoom)
+		{
+			//glm::mat4 projection = glm::ortho{ target.x, }
+		}
 
-	inline void set_position(glm::vec2 position) { this->position = position; };
-	inline void set_orientation(float rotation) { this->orientation = rotation; };
+		//projection.
 
-	inline void move(glm::vec2 velocity) { this->position += velocity; };
-	inline void rotate(float rotation) { this->orientation += rotation; };
+		glm::vec2 get_position() const { return position; };
+		float get_rotation() const { return rotation; };
 
-private:
-	glm::vec2 position;
-	float orientation;
-};
+		inline void set_target(glm::vec2 target) { this->target = target; };
+		inline void set_rotation(float rotation) { this->rotation = rotation; };
 
-
-/* TODO 3d
-class Camera3D : public Camera
-{
-public:
-	Camera3D();
-
-	vec3 getPosition() const { return position; };
-	quat getOrientation() const { return rotation; };
-
-	void setPosition(vec3 position) { this->position = position; };
-	void setOrientation(quat rotation) { this->rotation = rotation; };
-
-private:
-	vec3 position;
-	quat orientation;
+		inline void move(glm::vec2 velocity) { this->position += velocity; };
+		inline void rotate(float rotation) { this->rotation += rotation; };
+	};
 
 
-};
-*/
+	/* TODO 3d
+	class Camera3D : public Camera
+	{
+	public:
+		Camera3D();
+
+		vec3 getPosition() const { return position; };
+		quat getOrientation() const { return rotation; };
+
+		void setPosition(vec3 position) { this->position = position; };
+		void setOrientation(quat rotation) { this->rotation = rotation; };
+
+	private:
+		vec3 position;
+		quat orientation;
+
+
+	};
+	*/
+}
+
+
 #endif

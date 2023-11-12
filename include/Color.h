@@ -8,16 +8,17 @@ namespace OdisEngine {
 	template <typename T>
 	concept ColorTypeRGB = requires (T color)
 	{
-		{ std::is_convertible_v<decltype(color.r), float> };
-		{ std::is_convertible_v<decltype(color.g), float> };
-		{ std::is_convertible_v<decltype(color.b), float> };
+		requires std::floating_point<decltype(color.r)>;
+		requires std::floating_point<decltype(color.g)>;
+		requires std::floating_point<decltype(color.b)>;
 	};
 
 	struct ColorRGB
 	{
-		float r = 1.0f;
-		float g = 1.0f;
-		float b = 1.0f;
+		using value_type = float;
+		value_type r = 1.0f;
+		value_type g = 1.0f;
+		value_type b = 1.0f;
 	};
 
 	typedef ColorRGB Color;
