@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace OdisEngine;
+
 GLSLShader& GLSLShader::use()
 {
     glUseProgram(this->ID);

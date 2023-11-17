@@ -2,11 +2,14 @@
 
 #include <cassert>
 
+#include "Log.h"
+
 using namespace OdisEngine;
 
 void Window::error_callback(int error, const char* description)
 {
-	std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
+	logger->get_channel("OdisEngine")->log(LogLevel::fatal, "GLFW ERROR", error, description);
+	//std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
 }
 
 //the new width and height of the framebuffer
@@ -49,10 +52,12 @@ void Window::mouse_pos_input_callback(GLFWwindow* window, double x, double y)
 
 Window::Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI render_api)
 {
+	auto c = logger->create_channel("OdisEngine");
+
 	//initiliaze GLFW
 	if (!glfwInit())
 	{
-		std::cout << "GLFW init failed" << std::endl;
+		c->log(LogLevel::fatal, "GLFW init failed");
 		std::abort();
 	}
 
@@ -63,7 +68,7 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, Re
 	this->create_window(width, height, name, fullscreen_mode);
 
 	//sets up window related stuff for the choosen render api
-	this->render_api_setup(RenderAPI::OpenGL);
+	this->render_api_setup(RenderAPI::opengl);
 
 	glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 
@@ -85,18 +90,18 @@ void Window::window_setup(RenderAPI render_api)
 {
 	switch (render_api)
 	{
-	case RenderAPI::OpenGL:
+	case RenderAPI::opengl:
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		//Core profile so we dont have deprecated features
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		break;
-	case RenderAPI::Vulkan:
+	case RenderAPI::vulkan:
 		break;
 	default:
 	#ifdef _DEBUG
-		std::cout << "No render api choosen" << std::endl;
+		logger->get_channel("OdisEngine")->log(LogLevel::fatal, "GLFW init failed");
 		std::abort();
 	#endif
 		break;
@@ -116,30 +121,38 @@ void Window::create_window(int width, int height, std::string name, bool fullscr
 
 void Window::render_api_setup(RenderAPI render_api)
 {
+	auto c = logger->get_channel("OdisEngine");
 	int version;
+	std::string ver;
 
 	switch (render_api)
 	{
-	case RenderAPI::OpenGL:
+	case RenderAPI::opengl:
 
 		glfwMakeContextCurrent(window);
 
 		version = gladLoadGL(glfwGetProcAddress);
+		ver = std::to_string(GLAD_VERSION_MAJOR(version)) + "." + std::to_string(GLAD_VERSION_MINOR(version));
+
 		if (version == 0)
 		{
+			c->log(LogLevel::fatal, "Failed to initialize OpenGL context");
+
 			std::cout << "Failed to initialize OpenGL context ABORT ABORT" << std::endl;
 			std::abort();
 		}
 
-		std::cout << "Loaded OpenGL version: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
+		c->log(LogLevel::info, "Loaded OpenGL version", ver);
+		//std::cout << "Loaded OpenGL version: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
 
 		break;
-	case RenderAPI::Vulkan:
+	case RenderAPI::vulkan:
 
 
 		break;
 	default:
-		std::cout << "No render api choosen" << std::endl;
+		c->log(LogLevel::fatal, "No Render Api choosen");
+
 		std::abort();
 		break;
 	}

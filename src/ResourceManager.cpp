@@ -9,7 +9,7 @@
 
 using namespace OdisEngine;
 
-ResourceManager::ResourceManager(std::string font_path) : font_path(font_path)
+ResourceManager::ResourceManager(std::string font_path, std::string shader_path) : font_path(font_path), shader_path(shader_path)
 {
     if (FT_Init_FreeType(&ft))
     {

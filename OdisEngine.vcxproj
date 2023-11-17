@@ -82,7 +82,7 @@
     <LinkIncremental>true</LinkIncremental>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <TargetName>$(ProjectName)Debug</TargetName>
-    <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <OutDir>..\OdisWarriorsGame\lib\OdisEngine\</OutDir>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,7 +93,7 @@
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)Release</TargetName>
-    <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <OutDir>..\OdisWarriorsGame\lib\OdisEngine\</OutDir>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,7 +104,7 @@
     <LinkIncremental>true</LinkIncremental>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <TargetName>$(ProjectName)Debug</TargetName>
-    <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <OutDir>..\OdisWarriorsGame\lib\OdisEngine\</OutDir>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -115,7 +115,7 @@
     <ExternalIncludePath>C:\Users\Shanc\Desktop\OdisEngine\external;$(ExternalIncludePath)</ExternalIncludePath>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)Release</TargetName>
-    <OutDir>..\OdisWarriorsGame\lib\</OutDir>
+    <OutDir>..\OdisWarriorsGame\lib\OdisEngine\</OutDir>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -307,10 +307,6 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </ClInclude>
-    <ClInclude Include="include\utility\OdisConcepts.h">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </ClInclude>
     <ClInclude Include="include\utility\OdisMath.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
@@ -346,6 +342,12 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="include\Log.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

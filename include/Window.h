@@ -26,15 +26,15 @@ namespace OdisEngine
 {
 	enum class RenderAPI
 	{
-		OpenGL,
-		Vulkan
+		opengl,
+		vulkan
 	};
 
 	enum class NativeWindow
 	{
-		WINDOWS,
-		COCOA,
-		X11,
+		windows,
+		cocoa,
+		x11,
 	};
 
 	class Window

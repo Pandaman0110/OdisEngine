@@ -16,7 +16,7 @@ namespace OdisEngine
     class ResourceManager
     {
     public:
-        ResourceManager(std::string font_path);
+        ResourceManager(std::string font_path, std::string shader_path);
 
         GLSLShader& load_shader(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file, std::string name);
         GLSLShader& get_shader(std::string name);
@@ -31,7 +31,7 @@ namespace OdisEngine
         std::map<std::string, Texture2D> textures;
         std::map<std::string, Font> fonts;
 
-        std::string shader_path = "lib/shaders/";
+        std::string shader_path = "shaders/";
         std::string font_path = "fonts/";
 
         FT_Library ft{};

@@ -13,6 +13,7 @@ namespace OdisEngine
 {
 	constexpr size_t MATRIX_MAX_SIZE = 4;
 
+	/// concept requiring a generic vector type
 	template <typename T>
 	concept VectorType = requires (T component)
 	{
@@ -40,7 +41,7 @@ namespace OdisEngine
 		requires std::floating_point<decltype(matrix[1])>;
 	};
 
-
+	/// concept requiring a vector of integral values
 	template <typename T>
 	concept IntVectorType = requires (T component)
 	{
@@ -49,6 +50,7 @@ namespace OdisEngine
 		requires std::integral<decltype(component.y)>;
 	};
 
+	/// concept requinring a vector of floating point values
 	template <typename T>
 	concept FloatVectorType = requires (T component)
 	{

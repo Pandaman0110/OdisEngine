@@ -155,10 +155,10 @@
     <ClInclude Include="external\ft2build.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\OdisConcepts.h">
+    <ClInclude Include="include\utility\OdisMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility\OdisMath.h">
+    <ClInclude Include="include\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

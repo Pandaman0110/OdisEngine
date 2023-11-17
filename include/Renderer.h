@@ -41,8 +41,8 @@ namespace OdisEngine
 
 	enum class ScaleMode
 	{
-		NORMAL,
-		INTEGER
+		normal,
+		integer
 	};
 
 	class Renderer
@@ -75,7 +75,7 @@ namespace OdisEngine
 		}
 
 	public:
-		Renderer(Window* window, ResourceManager* resource_manager, ScaleMode scale_mode = ScaleMode::NORMAL) : scale_mode(scale_mode)
+		Renderer(Window* window, ResourceManager* resource_manager, ScaleMode scale_mode = ScaleMode::normal) : scale_mode(scale_mode)
 		{
 			window->set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -114,67 +114,103 @@ namespace OdisEngine
 			this->game_resolution.y = height;
 		}
 
-		void clear(float r, float g, float b, float a)
-		{
-			//disable z buf for 2D
-			glDisable(GL_DEPTH_TEST);
-			glClearColor(r, b, g, a);
-			glClear(GL_COLOR_BUFFER_BIT);
-		}
-		void clear(float r, float g, float b)
-		{
-			//????????????
-			clear(r, b, g, 1.0f);
-		}
+
+		/** \overload */
 		void clear()
 		{
 			clear(1.0f, 1.0f, 1.0f, 1.0f);
 		}
+
+		/** \overload */
+		void clear(float r, float g, float b)
+		{
+			//????????????
+			clear(r, g, b, 1.0f);
+		}
+
+		/// Clears the screen with a color, defaults to white
+		/** All values range from 0 to 1
+		 * \param r float value representing the red component of the color
+		 * \param g float value representing the green component of the color
+		 * \param b float value representing the blue component of the color
+		 * \param a float value representing the alpha component of the color
+		 *
+		 */
+		void clear(float r, float g, float b, float a)
+		{
+			//disable z buf for 2D
+			glDisable(GL_DEPTH_TEST);
+			glClearColor(r, g, b, a);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
+
+		/** \overload */
 		template <ColorTypeRGB T>
 		void clear(T color)
 		{
 			clear(color.r, color.b, color.g, 1.0f);
 		}
+
+		/**
+		 * \overload
+		 * 
+		 * \tparam color value fulfilling the concept OdisEngine::ColorTypeRGB
+		 * \param a float value representing the alpha component of the color
+		 */
 		template <ColorTypeRGB T>
 		void clear(T color, float a)
 		{
 			clear(color.r, color.b, color.g, a);
 		}
 
-
-
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		/** \overload */
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color)
 		{
 			draw_rect(pos, size, color, 0.0f, 1.0f);
 		}
 
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		/** \overload */
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color, float rotation)
 		{
 			draw_rect(pos, size, color, rotation, 1.0f);
 		}
-
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = ColorRGB>
+		
+		///Draws a rectangle
+		/**
+		 * \tparam pos value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
+		 * \tparam size value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
+		 * \tparam color value fulfilling the concept OdisEngine::ColorTypeRGB, defaults to glm::vec3. valid values range from 0 to 1
+		 * \param rotation float value representing the rotation in degrees 
+		 * \param alpha float value representing the alpha of the rectangle, valid values range from 0 to 1
+		 */
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color, float rotation, float alpha)
 		{
 			shape_renderer->draw_rect(pos, size, color, rotation, alpha);
 		}
 
-		//texture drawing
+		/**
+		 * .
+		 * 
+		 * \param texture Texture2D the texture to be drawn 
+		 * \tparam pos value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
+		 * \param rotation float value representing the rotation in degrees 
+		 */
 		template <IntVectorType T = glm::ivec2>
-		void draw_texture(Texture2D& texture, T position, float rotation = 0.0f)
+		void draw_texture(Texture2D& texture, T pos, float rotation = 0.0f)
 		{
-			sprite_renderer->draw_texture(texture, position, rotation);
+			sprite_renderer->draw_texture(texture, pos, rotation);
 		}
 
-		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos)
 		{
 			draw_text(text, pos, T2{1.0f, 1.0f, 1.0f}, 1.0f);
 		}
 
-		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos, T2 color)
 		{
 			draw_text(text, pos, color, 1.0f);
@@ -193,8 +229,10 @@ namespace OdisEngine
 			text_renderer->draw();
 		}
 
-
-
+		///Sets the active font to draw with void OdisEngine::Renderer::draw_text()
+		/**
+		 * \param font The Font object to set as the active font
+		 */
 		void set_font(Font& font)
 		{
 			text_renderer->load_font(font);
