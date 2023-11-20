@@ -133,6 +133,7 @@
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -185,6 +186,7 @@
       <UseStandardPreprocessor>false</UseStandardPreprocessor>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>4099;</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -233,6 +235,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\ft2build.h" />
+    <ClInclude Include="external\toml.hpp" />
+    <ClInclude Include="include\FileSystem.h">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </ClInclude>
     <ClInclude Include="include\Font.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
