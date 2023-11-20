@@ -22,7 +22,7 @@ namespace OdisEngine
         GLSLShader& get_shader(std::string name);
         Texture2D& load_texture(std::string file_name, std::string name, bool alpha);
         Texture2D& get_texture(std::string file_name);
-        Font& load_font(std::string file_name, std::string name, int h, int w = 0);
+        Font& load_font(std::string file_name, std::string name, uint8_t h);
         Font& get_font(std::string file_name, std::string name);
      
         void clear();
@@ -34,11 +34,9 @@ namespace OdisEngine
         std::string shader_path = "shaders/";
         std::string font_path = "fonts/";
 
-        FT_Library ft{};
-
         GLSLShader load_shader_from_file(std::string v_shader_file, std::string f_shader_file, std::string g_shader_file = "");
         Texture2D load_texture_from_file(std::string file_name, bool alpha);
-        Font load_font_from_file(std::string file_name, int width, int height);
+        Font load_font_from_file(std::string file_name, uint8_t height);
     };
 }
 

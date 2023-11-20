@@ -171,7 +171,7 @@ namespace OdisEngine
 	public:
 		Log()
 		{
-			create_channel("FileSystem");
+			create("FileSystem");
 		};
 
 		/// %Log stuff with a OdisEngine::LogLevel and OdisEngine::Printable values.
@@ -229,17 +229,17 @@ namespace OdisEngine
 
 
 		/** \overload */
-		Channel* create_channel(const std::string& channel_name)
+		Channel* create(const std::string& channel_name)
 		{
 			channels.insert({ channel_name, std::make_unique<Channel>(channel_name) });
-			return get_channel(channel_name);
+			return get(channel_name);
 		}
 
 		/** \overload */
-		Channel* create_channel(const std::string& channel_name, LogLevel filter_level)
+		Channel* create(const std::string& channel_name, LogLevel filter_level)
 		{
 			channels.insert({ channel_name, std::make_unique<Channel>(channel_name, filter_level) });
-			return get_channel(channel_name);
+			return get(channel_name);
 		}
 
 		/// Creates a channel and returns a pointer to it
@@ -251,20 +251,20 @@ namespace OdisEngine
 		 * \param default_level the default OdisEngine::LogLevel to construct the OdisEngine::Channel object with
 		 * \return a pointer to a OdisEngine::Channel object
 		 */
-		Channel* create_channel(const std::string& channel_name, LogLevel filter_level, LogLevel default_level)
+		Channel* create(const std::string& channel_name, LogLevel filter_level, LogLevel default_level)
 		{
 			channels.insert({ channel_name, std::make_unique<Channel>(channel_name, filter_level, default_level) });
-			return get_channel(channel_name);
+			return get(channel_name);
 		}
 
 		/// Gets an already constructed channel
 		/**
-		 * The channel should be previously created with OdisEngine::Log::create_channel()
+		 * The channel should be previously created with OdisEngine::Log::create()
 		 * 
 		 * \param channel_name name of the OdisEngine::Channel to create
 		 * \return a pointer to a OdisEngine::Channel object
 		 */
-		Channel* get_channel (const std::string& channel_name) const
+		Channel* get (const std::string& channel_name) const
 		{
 			return channels.at(channel_name).get();
 		}

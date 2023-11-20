@@ -11,7 +11,7 @@
 
 namespace OdisEngine
 {
-	const uint8_t NUM_FONT_CHARACTERS = 128;
+	const size_t NUM_FONT_CHARACTERS = 128;
 
 	/**
 	 * This struct represents a single glyph in a font
@@ -20,7 +20,7 @@ namespace OdisEngine
 	struct Character
 	{
 		/// the ID handle of the glyph texture
-		uint32_t texture_id;
+		unsigned int texture_id;
 
 		/// size in pixels of the glyph
 		glm::ivec2 size;
@@ -29,7 +29,7 @@ namespace OdisEngine
 		glm::ivec2 bearing;
 
 		///the horizontal distance in 1/64th pixels to the next glyph in the font
-		uint32_t advance;
+		int advance;
 	};
 
 	struct Font

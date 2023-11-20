@@ -226,7 +226,6 @@ namespace OdisEngine
 		void draw()
 		{
 			sprite_renderer->draw();
-			text_renderer->draw();
 		}
 
 		///Sets the active font to draw with void OdisEngine::Renderer::draw_text()

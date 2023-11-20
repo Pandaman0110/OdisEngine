@@ -8,7 +8,7 @@ using namespace OdisEngine;
 
 void Window::error_callback(int error, const char* description)
 {
-	logger->get_channel("OdisEngine")->log(LogLevel::fatal, "GLFW ERROR", error, description);
+	logger->get("OdisEngine")->log(LogLevel::fatal, "GLFW ERROR", error, description);
 	//std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
 }
 
@@ -52,7 +52,7 @@ void Window::mouse_pos_input_callback(GLFWwindow* window, double x, double y)
 
 Window::Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI render_api)
 {
-	auto c = logger->create_channel("OdisEngine");
+	auto c = logger->create("OdisEngine");
 
 	//initiliaze GLFW
 	if (!glfwInit())
@@ -101,7 +101,7 @@ void Window::window_setup(RenderAPI render_api)
 		break;
 	default:
 	#ifdef _DEBUG
-		logger->get_channel("OdisEngine")->log(LogLevel::fatal, "GLFW init failed");
+		logger->get("OdisEngine")->log(LogLevel::fatal, "GLFW init failed");
 		std::abort();
 	#endif
 		break;
@@ -121,7 +121,7 @@ void Window::create_window(int width, int height, std::string name, bool fullscr
 
 void Window::render_api_setup(RenderAPI render_api)
 {
-	auto c = logger->get_channel("OdisEngine");
+	auto c = logger->get("OdisEngine");
 	int version;
 	std::string ver;
 

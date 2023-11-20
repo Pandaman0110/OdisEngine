@@ -11,10 +11,6 @@ using namespace OdisEngine;
 
 ResourceManager::ResourceManager(std::string font_path, std::string shader_path) : font_path(font_path), shader_path(shader_path)
 {
-    if (FT_Init_FreeType(&ft))
-    {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-    }
 }
 
 GLSLShader& ResourceManager::load_shader(std::string v_shader_file_name, std::string f_shader_file_name, std::string g_shader_file_name, std::string name)
@@ -41,9 +37,9 @@ Texture2D& ResourceManager::get_texture(std::string name)
     return textures.at(name);
 }
 
-Font& ResourceManager::load_font(std::string file_name, std::string name, int height, int width)
+Font& ResourceManager::load_font(std::string file_name, std::string name, uint8_t height)
 {
-    fonts.insert({ name, load_font_from_file(file_name, height, width) });
+    fonts.insert({ name, load_font_from_file(file_name, height) });
     auto& font = fonts.at(name);
     font.name = name;
     return font;
@@ -135,16 +131,27 @@ Texture2D ResourceManager::load_texture_from_file(std::string file_name, bool al
     return texture;
 }
 
-Font ResourceManager::load_font_from_file(std::string file_name, int height, int width = 0)
+Font ResourceManager::load_font_from_file(std::string file_name, uint8_t height)
 {
+    FT_Library ft{};
+
+    if (FT_Init_FreeType(&ft))
+    {
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+    }
+
     FT_Face face{};
     Font font{};
 
-    if (FT_New_Face(ft, (font_path + file_name).c_str(), 0, &face))
+    if (FT_New_Face(ft, (font_path + file_name).data(), 0, &face))
     {
         std::cout << "ERROR::FREETYPE: Failed to load font: " << file_name << std::endl;
     }
-    FT_Set_Pixel_Sizes(face, width, height);
+
+    ///0 lets it choose the width dynamically
+    FT_Set_Pixel_Sizes(face, 0, height);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // load first 128 characters of ASCII set
     for (uint8_t c = 0; c < NUM_FONT_CHARACTERS; ++c)
@@ -178,9 +185,9 @@ Font ResourceManager::load_font_from_file(std::string file_name, int height, int
         // now store character for later use
         Character character = {
             texture,
-            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            static_cast<unsigned int>(face->glyph->advance.x)
+            glm::ivec2{face->glyph->bitmap.width, face->glyph->bitmap.rows },
+            glm::ivec2{face->glyph->bitmap_left, face->glyph->bitmap_top},
+            face->glyph->advance.x
         };
         font.characters.at(c) = character;
     }
