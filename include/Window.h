@@ -41,7 +41,7 @@ namespace OdisEngine
 	{
 
 	public:
-		Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI);
+		Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, RenderAPI);
 
 		int should_close();
 
@@ -79,6 +79,11 @@ namespace OdisEngine
 
 
 		GLFWwindow* get_window_handle() const { return window; };
+
+
+		//misc settings
+
+		void set_vsync(bool);
 
 #if	_WIN32
 		HWND get_win32_window();

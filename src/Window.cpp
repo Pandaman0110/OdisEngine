@@ -50,7 +50,7 @@ void Window::mouse_pos_input_callback(GLFWwindow* window, double x, double y)
 	mouse_pos_callback(x, y);
 }
 
-Window::Window(int width, int height, std::string name, bool fullscreen_mode, RenderAPI render_api)
+Window::Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, RenderAPI render_api)
 {
 	auto c = logger->create("OdisEngine");
 
@@ -69,6 +69,9 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, Re
 
 	//sets up window related stuff for the choosen render api
 	this->render_api_setup(RenderAPI::opengl);
+
+	//vsync mode
+	this->set_vsync(vsync);
 
 	glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 
@@ -176,6 +179,12 @@ void Window::swap_buffers()
 void Window::poll()
 {
 	glfwPollEvents();
+}
+
+void Window::set_vsync(bool value)
+{
+	//1 sets vsync on, 0 sets it off
+	glfwSwapInterval(static_cast<int>(value));
 }
 
 #if _WIN32

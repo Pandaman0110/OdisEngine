@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <algorithm>
 #include <initializer_list>
+#include <concepts>
 
 #include "utility/OdisMath.h"
 
@@ -47,7 +48,8 @@ namespace OdisEngine
 			glDeleteVertexArrays(1, &this->vao);
 		};
 
-		void set_vertices(std::span<float> vertices, int num_vertices ...)
+		template <std::integral ... Args>
+		void set_vertices(std::span<float> vertices, Args ... args)
 		{
 			this->vertices.clear();
 			this->vertices.resize(vertices.size(), 0.0f);
@@ -61,7 +63,7 @@ namespace OdisEngine
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-			set_vertex_attributes({ num_vertices });
+			set_vertex_attributes({ args... });
 
 			glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);

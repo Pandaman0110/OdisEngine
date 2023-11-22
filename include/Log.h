@@ -124,7 +124,7 @@ namespace OdisEngine
 		template <Printable ...Args>
 		void logf(LogLevel level, const std::format_string<Args...> fmt, Args&& ...args)
 		{
-			log(level, std::vformat(fmt.get(), std::make_format_args(args...)));
+			log(level, std::vformat(fmt.get(), std::make_format_args(std::forward<Args>(args)...)));
 		}
 
 		/// %Log stuff with the default OdisEngine::LogLevel and OdisEngine::Printable values.
@@ -204,7 +204,7 @@ namespace OdisEngine
 		template <Printable ...Args>
 		void logf(LogLevel level, const std::format_string<Args...> fmt, Args&& ...args)
 		{
-			log(level, std::vformat(fmt.get(), std::make_format_args(args...)));
+			log(level, std::vformat(fmt.get(), std::make_format_args(std::forward<Args>(args)...)));
 		}
 
 		/// %Log stuff with the default OdisEngine::LogLevel and OdisEngine::Printable values.
@@ -216,15 +216,6 @@ namespace OdisEngine
 		void log(Args&&...args)
 		{
 			log(default_level, std::forward<Args>(args)...);
-			/*
-			if (valid_level(default_level))
-			{
-				std::cout << name << ": ";
-				std::cout << default_level << " - ";
-				((std::cout << std::forward<Args>(args) << ", "), ...);
-				std::cout << std::endl;
-			}
-			*/
 		}
 
 

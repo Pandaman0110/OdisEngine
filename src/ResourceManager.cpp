@@ -13,39 +13,38 @@ ResourceManager::ResourceManager(std::string font_path, std::string shader_path)
 {
 }
 
-GLSLShader& ResourceManager::load_shader(std::string v_shader_file_name, std::string f_shader_file_name, std::string g_shader_file_name, std::string name)
+GLSLShader& ResourceManager::load_shader(const std::string& v_shader_file_name, const std::string& f_shader_file_name, const std::string& g_shader_file_name, std::string name)
 {
     shaders.insert({ name, load_shader_from_file(v_shader_file_name, f_shader_file_name, g_shader_file_name)});
-    return shaders.at(name);
+    return get_shader(name);
 }
 
-GLSLShader& ResourceManager::get_shader(std::string name)
+
+Texture2D& ResourceManager::load_texture(const std::string& file_name, bool alpha, std::string name)
+{
+    textures.insert({ name, std::move(load_texture_from_file(file_name, alpha)) });
+    return get_texture(name);
+}
+
+
+Font& ResourceManager::load_font(const std::string& file_name, uint8_t height, std::string name)
+{
+    fonts.insert({ name, load_font_from_file(file_name, height) });
+    return get_font(name);
+}
+
+GLSLShader& ResourceManager::get_shader(const std::string& name)
 {
     return shaders.at(name);
 }
 
-Texture2D& ResourceManager::load_texture(std::string file_name, std::string name, bool alpha)
-{
-    textures.insert({ name, load_texture_from_file(file_name, alpha) });
-    auto& text = textures.at(name);
-    text.name = name;
-    return text;
-}
-
-Texture2D& ResourceManager::get_texture(std::string name)
+Texture2D& ResourceManager::get_texture(const std::string& name)
 {
     return textures.at(name);
 }
 
-Font& ResourceManager::load_font(std::string file_name, std::string name, uint8_t height)
-{
-    fonts.insert({ name, load_font_from_file(file_name, height) });
-    auto& font = fonts.at(name);
-    font.name = name;
-    return font;
-}
 
-Font& ResourceManager::get_font(std::string file_name, std::string name)
+Font& ResourceManager::get_font(const std::string& name)
 {
     return fonts.at(name);
 }
@@ -64,7 +63,7 @@ void ResourceManager::clear()
     fonts.clear();
 }
 
-GLSLShader ResourceManager::load_shader_from_file(std::string v_shader_file_name, std::string f_shader_file_name, std::string g_shader_file_name)
+GLSLShader ResourceManager::load_shader_from_file(const std::string& v_shader_file_name, const std::string& f_shader_file_name, const std::string& g_shader_file_name)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertex_code;
@@ -108,7 +107,7 @@ GLSLShader ResourceManager::load_shader_from_file(std::string v_shader_file_name
     return shader;
 }
 
-Texture2D ResourceManager::load_texture_from_file(std::string file_name, bool alpha)
+Texture2D ResourceManager::load_texture_from_file(const std::string& file_name, bool alpha)
 {
     // create texture object
     Texture2D texture;
@@ -131,7 +130,7 @@ Texture2D ResourceManager::load_texture_from_file(std::string file_name, bool al
     return texture;
 }
 
-Font ResourceManager::load_font_from_file(std::string file_name, uint8_t height)
+Font ResourceManager::load_font_from_file(const std::string& file_name, uint8_t height)
 {
     FT_Library ft{};
 

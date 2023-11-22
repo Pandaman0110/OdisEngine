@@ -35,7 +35,6 @@ namespace OdisEngine
 	struct Font
 	{
 		glm::ivec2 size;
-		std::string name;
 		std::array<Character, NUM_FONT_CHARACTERS> characters;
 	};
 }

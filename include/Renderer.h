@@ -204,19 +204,19 @@ namespace OdisEngine
 			sprite_renderer->draw_texture(texture, pos, rotation);
 		}
 
-		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
+		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos)
 		{
 			draw_text(text, pos, T2{1.0f, 1.0f, 1.0f}, 1.0f);
 		}
 
-		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
+		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos, T2 color)
 		{
 			draw_text(text, pos, color, 1.0f);
 		}
 
-		template <FloatVectorType T1 = glm::vec2, ColorTypeRGB T2 = ColorRGB>
+		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos, T2 color, float scale)
 		{
 			text_renderer->draw_text(text, pos, color, scale);
