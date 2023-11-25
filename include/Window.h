@@ -24,12 +24,6 @@
 
 namespace OdisEngine 
 {
-	enum class RenderAPI
-	{
-		opengl,
-		vulkan
-	};
-
 	enum class NativeWindow
 	{
 		windows,
@@ -41,7 +35,7 @@ namespace OdisEngine
 	{
 
 	public:
-		Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, RenderAPI);
+		Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, bool debug_context);
 
 		int should_close();
 
@@ -79,6 +73,7 @@ namespace OdisEngine
 
 
 		GLFWwindow* get_window_handle() const { return window; };
+		auto get_proc_address() { return glfwGetProcAddress; };
 
 
 		//misc settings
@@ -113,10 +108,9 @@ namespace OdisEngine
 
 		GLFWwindow* window = nullptr;
 
-		void create_window(int width, int height, std::string name, bool fullscreen_mode);
+		GLFWwindow* create_window(int width, int height, std::string name, bool fullscreen_mode, bool debug_context);
 
-		void window_setup(RenderAPI render_api);
-		void render_api_setup(RenderAPI render_api);
+		void window_setup(bool debug_context);
 	};
 
 }

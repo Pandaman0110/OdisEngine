@@ -9,7 +9,6 @@ using namespace OdisEngine;
 void Window::error_callback(int error, const char* description)
 {
 	logger->get("OdisEngine")->log(LogLevel::fatal, "GLFW ERROR", error, description);
-	//std::cout << "GLFW ERROR: " << error << ": " << description << std::endl;
 }
 
 //the new width and height of the framebuffer
@@ -50,7 +49,7 @@ void Window::mouse_pos_input_callback(GLFWwindow* window, double x, double y)
 	mouse_pos_callback(x, y);
 }
 
-Window::Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, RenderAPI render_api)
+Window::Window(int width, int height, std::string name, bool fullscreen_mode, bool vsync, bool debug_context)
 {
 	auto c = logger->create("OdisEngine");
 
@@ -61,14 +60,8 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, bo
 		std::abort();
 	}
 
-	//window hinting, happens before window creation
-	this->window_setup(render_api);
-
-	//actually creates the window
-	this->create_window(width, height, name, fullscreen_mode);
-
-	//sets up window related stuff for the choosen render api
-	this->render_api_setup(RenderAPI::opengl);
+	//create the window
+	this->create_window(width, height, name, fullscreen_mode, debug_context);
 
 	//vsync mode
 	this->set_vsync(vsync);
@@ -89,76 +82,30 @@ Window::Window(int width, int height, std::string name, bool fullscreen_mode, bo
 	glfwSetCursorPosCallback(window, mouse_pos_input_callback);
 }
 
-void Window::window_setup(RenderAPI render_api)
+
+GLFWwindow* Window::create_window(int width, int height, std::string name, bool fullscreen_mode, bool debug_context)
 {
-	switch (render_api)
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+
+	//Core profile so we dont have deprecated features
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	if (debug_context)
 	{
-	case RenderAPI::opengl:
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		//Core profile so we dont have deprecated features
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		break;
-	case RenderAPI::vulkan:
-		break;
-	default:
-	#ifdef _DEBUG
-		logger->get("OdisEngine")->log(LogLevel::fatal, "GLFW init failed");
-		std::abort();
-	#endif
-		break;
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	}
-}
 
-void Window::create_window(int width, int height, std::string name, bool fullscreen_mode)
-{
 	//create the window
 	if (fullscreen_mode)
 		window = glfwCreateWindow(width, height, name.c_str(), glfwGetPrimaryMonitor(), nullptr);
 	else
 		window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
-	assert(window != NULL && "Failed to create GLFW window ABORT ABORT\n");
-}
 
-void Window::render_api_setup(RenderAPI render_api)
-{
-	auto c = logger->get("OdisEngine");
-	int version;
-	std::string ver;
+	glfwMakeContextCurrent(window);
 
-	switch (render_api)
-	{
-	case RenderAPI::opengl:
-
-		glfwMakeContextCurrent(window);
-
-		version = gladLoadGL(glfwGetProcAddress);
-		ver = std::to_string(GLAD_VERSION_MAJOR(version)) + "." + std::to_string(GLAD_VERSION_MINOR(version));
-
-		if (version == 0)
-		{
-			c->log(LogLevel::fatal, "Failed to initialize OpenGL context");
-
-			std::cout << "Failed to initialize OpenGL context ABORT ABORT" << std::endl;
-			std::abort();
-		}
-
-		c->log(LogLevel::info, "Loaded OpenGL version", ver);
-		//std::cout << "Loaded OpenGL version: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
-
-		break;
-	case RenderAPI::vulkan:
-
-
-		break;
-	default:
-		c->log(LogLevel::fatal, "No Render Api choosen");
-
-		std::abort();
-		break;
-	}
+	return window;
 }
 
 int Window::should_close()

@@ -4,6 +4,9 @@
 #include <memory>
 #include <concepts>
 #include <type_traits>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include "glad/gl.h"
 
@@ -12,6 +15,7 @@
 #include "SpriteRenderer.h"
 #include "TextRenderer.h"
 #include "ShapeRenderer.h"
+#include "Log.h"
 
 #include "utility/OdisMath.h"
 #include "Color.h"
@@ -74,10 +78,94 @@ namespace OdisEngine
 			set_viewport(offset.x, offset.y, size.x, size.y);
 		}
 
+		void setup(Window* window)
+		{
+			window->set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
+
+			auto c = logger->create("OdisEngine");
+			int version;
+			std::string ver;
+
+			version = gladLoadGL(window->get_proc_address());
+			ver = std::to_string(GLAD_VERSION_MAJOR(version)) + "." + std::to_string(GLAD_VERSION_MINOR(version));
+
+			if (version == 0)
+			{
+				c->log(LogLevel::fatal, "Failed to initialize OpenGL context");
+			}
+
+			c->log(LogLevel::info, "Loaded OpenGL version", ver);
+
+			int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+			if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+			{
+				c->log(LogLevel::info, "Debug context succesfully initialized");
+
+				glEnable(GL_DEBUG_OUTPUT);
+				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+				glDebugMessageCallback(opengl_debug_callback, nullptr);
+				glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+			}
+			else
+			{
+				c->log(LogLevel::info, "Debug context not initialized");
+			}
+		}
+
+		static void opengl_debug_callback(GLenum source,
+			GLenum type,
+			unsigned int id,
+			GLenum severity,
+			GLsizei length,
+			const char* message,
+			const void* userParam)
+		{
+			auto c = logger->get("OdisEngine");
+
+			// ignore non-significant error/warning codes
+			if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+
+			std::stringstream source_string, type_string;
+
+			switch (source)
+			{
+			case GL_DEBUG_SOURCE_API:             source_string << "API"; break;
+			case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   source_string << "Window System"; break;
+			case GL_DEBUG_SOURCE_SHADER_COMPILER: source_string << "Shader Compiler"; break;
+			case GL_DEBUG_SOURCE_THIRD_PARTY:     source_string << "Third Party"; break;
+			case GL_DEBUG_SOURCE_APPLICATION:     source_string << "Application"; break;
+			case GL_DEBUG_SOURCE_OTHER:           source_string << "Other"; break;
+			}
+
+			switch (type)
+			{
+			case GL_DEBUG_TYPE_ERROR:               type_string << "Error"; break;
+			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: type_string << "Deprecated Behaviour"; break;
+			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  type_string << "Undefined Behaviour"; break;
+			case GL_DEBUG_TYPE_PORTABILITY:         type_string << "Portability"; break;
+			case GL_DEBUG_TYPE_PERFORMANCE:         type_string << "Performance"; break;
+			case GL_DEBUG_TYPE_MARKER:              type_string << "Marker"; break;
+			case GL_DEBUG_TYPE_PUSH_GROUP:          type_string << "Push Group"; break;
+			case GL_DEBUG_TYPE_POP_GROUP:           type_string << "Pop Group"; break;
+			case GL_DEBUG_TYPE_OTHER:               type_string << "Other"; break;
+			}
+
+			LogLevel level = LogLevel::debug;
+
+			switch (severity)
+			{
+			case GL_DEBUG_SEVERITY_HIGH:         level = LogLevel::fatal; break;
+			case GL_DEBUG_SEVERITY_MEDIUM:       level = LogLevel::error; break;
+			case GL_DEBUG_SEVERITY_LOW:          level = LogLevel::warning; break;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: level = LogLevel::info; break;
+			}
+			
+			c->logf(level, "Source: {}, Type: {}, ID: ({}), OpenGL Debug Message: \n{}", source_string.str(), type_string.str(), id, message);
+		}
 	public:
 		Renderer(Window* window, ResourceManager* resource_manager, ScaleMode scale_mode = ScaleMode::normal) : scale_mode(scale_mode)
 		{
-			window->set_window_size_callback(std::bind(&Renderer::window_size_callback, this, std::placeholders::_1, std::placeholders::_2));
+			this->setup(window);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -191,6 +279,24 @@ namespace OdisEngine
 			shape_renderer->draw_rect(pos, size, color, rotation, alpha);
 		}
 
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		void draw_circle(T1 pos, float radius, T2 color)
+		{
+
+		}
+
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		void draw_polygon(T1 pos, float radius, size_t num_sides, T2 color)
+		{
+			this->draw_polygon(pos, radius, num_sides, color, 0.0f);
+		}
+
+		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		void draw_polygon(T1 pos, float radius, size_t num_sides, T2 color, float rotation)
+		{
+			shape_renderer->draw_polygon(pos, radius, num_sides, color, rotation);
+		}
+
 		/**
 		 * .
 		 * 
@@ -225,7 +331,6 @@ namespace OdisEngine
 
 		void draw()
 		{
-			sprite_renderer->draw();
 		}
 
 		///Sets the active font to draw with void OdisEngine::Renderer::draw_text()

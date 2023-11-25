@@ -226,12 +226,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\gl.c" />
-    <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\OpenGL\GLSLShader.cpp" />
     <ClCompile Include="OdisEngine.cpp" />
-    <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="external\vulkan.c" />
+    <ClCompile Include="src\OpenGL\GLSLShader.cpp" />
+    <ClCompile Include="src\OpenGL\Texture2D.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\ft2build.h" />

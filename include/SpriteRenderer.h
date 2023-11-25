@@ -54,7 +54,7 @@ namespace OdisEngine
 			glActiveTexture(GL_TEXTURE0);
 			texture.bind();
 
-			mesh.draw();
+			mesh.draw(6);
 		}
 
 		void draw() {};

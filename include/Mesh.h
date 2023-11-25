@@ -16,44 +16,52 @@
 
 namespace OdisEngine
 {
+	enum class DrawMode
+	{
+		triangles = GL_TRIANGLES,
+		triangle_fans = GL_TRIANGLE_FAN,
+	};
+
 	class Mesh
 	{
 	private:
 		unsigned int vao, vbo, ebo;
 		
 		int stride;
-		int current_attribute_num = 0;
 
 		//{num, offset}
-		void set_vertex_attributes(std::initializer_list<int> num_vertices)
+		void set_vertex_attributes(std::initializer_list<int> vertex_sizes)
 		{
-			stride = std::accumulate(num_vertices.begin(), num_vertices.end(), 0);
+			stride = std::accumulate(vertex_sizes.begin(), vertex_sizes.end(), 0);
 
 			int sum = 0;
-			for (auto num : num_vertices)
+			int current_attribute_num = 0;
+
+			for (auto num_vertices : vertex_sizes)
 			{
+				glVertexAttribPointer(current_attribute_num, num_vertices, GL_FLOAT, GL_FALSE, stride * sizeof(float), reinterpret_cast<void*>(sum * sizeof(float)));
 				glEnableVertexAttribArray(current_attribute_num);
-				glVertexAttribPointer(current_attribute_num, num, GL_FLOAT, GL_FALSE, static_cast<GLsizei>(stride * sizeof(float)), (void*)(sum * sizeof(float)));
+
+				//std::cout << current_attribute_num << " " << num_vertices << " " << stride * sizeof(float) << " " << sum * sizeof(float) << std::endl;
 
 				++current_attribute_num;
-
-				sum += num;
+				sum += num_vertices;
 			}
-
 		};
 	public:
 		Mesh() {};
 		~Mesh() 
 		{
 			glDeleteVertexArrays(1, &this->vao);
+
 		};
 
 		template <std::integral ... Args>
-		void set_vertices(std::span<float> vertices, Args ... args)
+		void set_vertices(std::vector<float> vertices, Args ... args)
 		{
 			this->vertices.clear();
-			this->vertices.resize(vertices.size(), 0.0f);
-			std::copy(vertices.begin(), vertices.end(), this->vertices.begin());
+			this->vertices.shrink_to_fit();
+			this->vertices.swap(vertices);
 
 			glGenVertexArrays(1, &vao);
 			glGenBuffers(1, &vbo);
@@ -61,7 +69,7 @@ namespace OdisEngine
 			glBindVertexArray(vao);
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float) , this->vertices.data(), GL_DYNAMIC_DRAW);
 
 			set_vertex_attributes({ args... });
 
@@ -78,18 +86,27 @@ namespace OdisEngine
 			glGenBuffers(1, &ebo);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_DYNAMIC_DRAW);
 
 		}
 		
-		void draw()
+		void draw(size_t count)
+		{
+			draw(DrawMode::triangles, count);
+		}
+
+		void draw(DrawMode draw_mode, size_t count)
 		{
 			glBindVertexArray(vao);
-			
-			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-			glBindVertexArray;
+			const int offset = 0;
+			glDrawArrays(static_cast<int>(draw_mode), 0, static_cast<GLsizei>(count));
+			//std::cout << static_cast<GLsizei>(vertices.size() / stride) << '\n';
+
+			glBindVertexArray(0);
 		}
+
+		size_t size() const { return vertices.size() / 2; };
 
 		std::vector<float> vertices{};
 		std::vector<unsigned int> indices{};
