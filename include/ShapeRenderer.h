@@ -61,16 +61,18 @@ namespace OdisEngine
 			std::vector<float> rect_vertices
 			{
 				0.0f, 1.0f,
-				1.0f, 0.0f,
 				0.0f, 0.0f,
-
-				0.0f, 1.0f,
 				1.0f, 1.0f,
-				1.0f, 0.0f
+				1.0f, 0.0f,
 			};
 
 			mesh.set_vertices(std::move(rect_vertices), 2);
-			//mesh.set_indices(rect_indices);
+		}
+
+		template <RectangleVectorType T1, ColorTypeRGB T2>
+		void draw(T1 rect, T2 color, float rotation, float alpha)
+		{
+			draw_rect(rect.pos, rect.size, color, rotation, alpha);
 		}
 
 		template <IntVectorType T1, ColorTypeRGB T2>
@@ -90,12 +92,7 @@ namespace OdisEngine
 			shader.set_matrix4("model", model);
 			shader.set_vector4f("shape_color", glm::vec4(color.r, color.g, color.b, alpha));
 
-			mesh.draw(6);
-			/*
-			glBindVertexArray(this->vao);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-			*/
+			mesh.draw(DrawMode::triangle_strip, mesh.size());
 		}
 
 		template <IntVectorType T1, ColorTypeRGB T2>

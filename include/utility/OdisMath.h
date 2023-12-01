@@ -28,6 +28,15 @@ namespace OdisEngine
 	};
 
 	template <typename T>
+	concept RectangleType = requires (T component)
+	{
+		requires std::integral<decltype(component.x)>;
+		requires std::integral<decltype(component.y)>;
+		requires std::integral<decltype(component.x)>;
+		requires std::integral<decltype(component.y)>;
+	};
+
+	template <typename T>
 	concept IntMatrixType = requires (T matrix)
 	{
 		requires MatrixType<T>;
@@ -59,6 +68,12 @@ namespace OdisEngine
 		requires std::floating_point<decltype(component.y)>;
 	};
 
+	template <typename T>
+	concept RectangleVectorType = requires (T component)
+	{
+		requires IntVectorType<decltype(component.pos)>;
+		requires IntVectorType<decltype(component.size)>;
+	};
 }
 
 

@@ -229,7 +229,6 @@
     <ClCompile Include="OdisEngine.cpp" />
     <ClCompile Include="external\vulkan.c" />
     <ClCompile Include="src\OpenGL\GLSLShader.cpp" />
-    <ClCompile Include="src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
@@ -305,12 +304,6 @@
     </ClInclude>
     <ClInclude Include="include\OdisEngine.h" />
     <ClInclude Include="include\ShapeRenderer.h">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </ClInclude>
-    <ClInclude Include="include\Shapes.h">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

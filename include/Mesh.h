@@ -20,6 +20,7 @@ namespace OdisEngine
 	{
 		triangles = GL_TRIANGLES,
 		triangle_fans = GL_TRIANGLE_FAN,
+		triangle_strip = GL_TRIANGLE_STRIP,
 	};
 
 	class Mesh

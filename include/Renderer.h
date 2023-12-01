@@ -19,7 +19,6 @@
 
 #include "utility/OdisMath.h"
 #include "Color.h"
-#include "Shapes.h"
 #include "Camera.h"
 
 namespace OdisEngine
@@ -305,7 +304,7 @@ namespace OdisEngine
 		 * \param rotation float value representing the rotation in degrees 
 		 */
 		template <IntVectorType T = glm::ivec2>
-		void draw_texture(Texture2D& texture, T pos, float rotation = 0.0f)
+		void draw_texture(Texture& texture, T pos, float rotation = 0.0f)
 		{
 			sprite_renderer->draw_texture(texture, pos, rotation);
 		}

@@ -31,22 +31,32 @@ namespace OdisEngine
 				1.0f, 0.0f, 1.0f, 0.0f
 			};
 
+			/*
+			std::vector<float> vertices
+			{
+				0.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+			};
+			*/
+
 			mesh.set_vertices(vertices, 4);
 		};
 
 		template <IntVectorType T>
-		void draw_texture(Texture2D& texture, T position, float rotation)
+		void draw_texture(Texture& texture, T position, float rotation)
 		{
 			shader.use();
 
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(position.x, position.y, 0.0f));
 
-			model = glm::translate(model, glm::vec3(0.5f * texture.width, 0.5f * texture.height, 0.0f));
+			model = glm::translate(model, glm::vec3(0.5f * texture.w, 0.5f * texture.h, 0.0f));
 			model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-			model = glm::translate(model, glm::vec3(-0.5f * texture.width, -0.5f * texture.height, 0.0f));
+			model = glm::translate(model, glm::vec3(-0.5f * texture.w, -0.5f * texture.h, 0.0f));
 
-			model = glm::scale(model, glm::vec3(texture.width, texture.height, 1.0f));
+			model = glm::scale(model, glm::vec3(texture.w, texture.h, 1.0f));
 
 			shader.set_matrix4("model", model);
 			shader.set_vector3f("sprite_color", glm::vec3(1.0f, 1.0f, 1.0f));
@@ -55,6 +65,18 @@ namespace OdisEngine
 			texture.bind();
 
 			mesh.draw(6);
+		}
+
+		template <IntVectorType T>
+		void draw_texture(Texture& texture, T position, int d)
+		{
+
+		}
+
+		template <IntVectorType T>
+		void draw_texture_sliced(Texture& texture, T pos, int border, float rotation)
+		{
+			
 		}
 
 		void draw() {};

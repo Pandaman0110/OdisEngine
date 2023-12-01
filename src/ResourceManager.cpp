@@ -7,6 +7,8 @@
 #include <glad/gl.h>
 #include <SOIL/SOIL.h>
 
+#include "Log.h"
+
 using namespace OdisEngine;
 
 ResourceManager::ResourceManager(std::string font_path, std::string shader_path) : font_path(font_path), shader_path(shader_path)
@@ -20,7 +22,7 @@ GLSLShader& ResourceManager::load_shader(const std::string& v_shader_file_name, 
 }
 
 
-Texture2D& ResourceManager::load_texture(const std::string& file_name, bool alpha, std::string name)
+Texture& ResourceManager::load_texture(const std::string& file_name, bool alpha, std::string name)
 {
     textures.insert({ name, std::move(load_texture_from_file(file_name, alpha)) });
     return get_texture(name);
@@ -38,7 +40,7 @@ GLSLShader& ResourceManager::get_shader(const std::string& name)
     return shaders.at(name);
 }
 
-Texture2D& ResourceManager::get_texture(const std::string& name)
+Texture& ResourceManager::get_texture(const std::string& name)
 {
     return textures.at(name);
 }
@@ -107,15 +109,17 @@ GLSLShader ResourceManager::load_shader_from_file(const std::string& v_shader_fi
     return shader;
 }
 
-Texture2D ResourceManager::load_texture_from_file(const std::string& file_name, bool alpha)
+Texture ResourceManager::load_texture_from_file(const std::string& file_name, bool alpha)
 {
     // create texture object
-    Texture2D texture;
+
+    Texture texture;
     if (alpha)
     {
         texture.interal_format = GL_RGBA;
         texture.image_format = GL_RGBA;
     }
+
     // load image
     int width, height, nr_channels;
 
@@ -136,7 +140,7 @@ Font ResourceManager::load_font_from_file(const std::string& file_name, uint8_t 
 
     if (FT_Init_FreeType(&ft))
     {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        logger->get("OdisEngine")->log(LogLevel::warning, "Could not init FreeType Library");
     }
 
     FT_Face face{};
@@ -144,7 +148,7 @@ Font ResourceManager::load_font_from_file(const std::string& file_name, uint8_t 
 
     if (FT_New_Face(ft, (font_path + file_name).data(), 0, &face))
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font: " << file_name << std::endl;
+        logger->get("OdisEngine")->log(LogLevel::warning, "Failed to load font");
     }
 
     ///0 lets it choose the width dynamically
@@ -158,7 +162,7 @@ Font ResourceManager::load_font_from_file(const std::string& file_name, uint8_t 
         // Load character glyph 
         if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+            logger->get("OdisEngine")->logf(LogLevel::warning, "{}: {}", "Failed to load glyph num", c);
             continue;
         }
         // generate texture
