@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 
 #include <string_view>
 
@@ -28,6 +29,7 @@ namespace OdisEngine
         Texture& get_texture(const std::string& name);
         Font& get_font(const std::string& name);
 
+        
      
         void clear();
     private:
@@ -43,5 +45,7 @@ namespace OdisEngine
         Font load_font_from_file(const std::string& file_name, uint8_t height);
     };
 }
+
+extern std::unique_ptr<OdisEngine::ResourceManager> resource_manager;
 
 #endif

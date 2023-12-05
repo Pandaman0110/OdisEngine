@@ -75,7 +75,7 @@ namespace OdisEngine
 			draw_rect(rect.pos, rect.size, color, rotation, alpha);
 		}
 
-		template <IntVectorType T1, ColorTypeRGB T2>
+		template <VectorType T1, ColorTypeRGB T2>
 		void draw_rect(T1 pos, T1 size, T2 color, float rotation, float alpha)
 		{
 			shader.use();
@@ -95,7 +95,7 @@ namespace OdisEngine
 			mesh.draw(DrawMode::triangle_strip, mesh.size());
 		}
 
-		template <IntVectorType T1, ColorTypeRGB T2>
+		template <VectorType T1, ColorTypeRGB T2>
 		void draw_polygon(T1 pos, float radius, size_t num_sides, T2 color, float rotation)
 		{
 			shader.use();

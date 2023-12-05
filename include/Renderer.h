@@ -19,14 +19,13 @@
 
 #include "utility/OdisMath.h"
 #include "Color.h"
-#include "Camera.h"
 
 namespace OdisEngine
 {
 	template <VectorType T = glm::ivec2>
 	T calculate_res_scale(T game_resolution, T target_resolution)
 	{
-		return T { target_resolution.x / game_resolution.x, target_resolution.y / game_resolution.y };
+		return T{ target_resolution.x / game_resolution.x, target_resolution.y / game_resolution.y };
 	}
 
 	template <IntVectorType T = glm::ivec2>
@@ -37,7 +36,7 @@ namespace OdisEngine
 	}
 
 	template <IntVectorType T = glm::ivec2>
-	T calculate_offset(T game_resolution, T screen_size) 
+	T calculate_offset(T game_resolution, T screen_size)
 	{
 		return T{ (screen_size.x - game_resolution.x) / 2, (screen_size.y - game_resolution.y) / 2 };
 	}
@@ -48,6 +47,15 @@ namespace OdisEngine
 		integer
 	};
 
+	template <typename T>
+	concept Camera2dType = requires (T camera)
+	{
+		{ camera.position() };
+		{ camera.rotation() };
+			requires VectorType<decltype(camera.position())>;
+			requires std::floating_point<decltype(camera.rotation())>;
+	};
+
 	class Renderer
 	{
 	private:
@@ -55,14 +63,13 @@ namespace OdisEngine
 		std::unique_ptr<TextRenderer> text_renderer;
 		std::unique_ptr<ShapeRenderer> shape_renderer;
 
-		Camera2D camera;
 		glm::ivec2 game_resolution;
 		ScaleMode scale_mode;
 
 
 		void window_size_callback(int width, int height)
 		{
-			
+
 		}
 
 		void set_viewport(int offset_x, int offset_y, int width, int height)
@@ -101,7 +108,7 @@ namespace OdisEngine
 				c->log(LogLevel::info, "Debug context succesfully initialized");
 
 				glEnable(GL_DEBUG_OUTPUT);
-				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 				glDebugMessageCallback(opengl_debug_callback, nullptr);
 				glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 			}
@@ -158,49 +165,62 @@ namespace OdisEngine
 			case GL_DEBUG_SEVERITY_LOW:          level = LogLevel::warning; break;
 			case GL_DEBUG_SEVERITY_NOTIFICATION: level = LogLevel::info; break;
 			}
-			
+
 			c->logf(level, "Source: {}, Type: {}, ID: ({}), OpenGL Debug Message: \n{}", source_string.str(), type_string.str(), id, message);
 		}
+
+		template <VectorType T>
+		glm::mat4 build_view_matrix(T pos, float rotation)
+		{
+			glm::mat4 view = glm::mat4(1.0f);
+
+			view = glm::translate(view, glm::vec3(static_cast<int>(pos.x), static_cast<int>(pos.y), 0.0f));
+
+			view = glm::translate(view, glm::vec3(0.5f, 0.5f, 0.0f));
+			view = glm::rotate(view, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+			view = glm::translate(view, glm::vec3(-0.5f, -0.5f, 0.0f));
+
+			return view;
+		}
 	public:
-		Renderer(Window* window, ResourceManager* resource_manager, ScaleMode scale_mode = ScaleMode::normal) : scale_mode(scale_mode)
+		Renderer(Window* window, ScaleMode scale_mode = ScaleMode::normal) : scale_mode(scale_mode)
 		{
 			this->setup(window);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			//glm::ivec2 resolution = calculate_resolution( ,window.get_window_size())
 
 			glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window->get_window_width()), static_cast<float>(window->get_window_height()), 0.0f, -1.0f, 1.0f);
+			glm::mat4 view = glm::identity<glm::mat4>();
+
 
 			sprite_renderer = std::make_unique<SpriteRenderer>(resource_manager->load_shader("sprite.vert", "sprite.frag", "", "sprite"));
 			auto& sprite_shader = resource_manager->get_shader("sprite");
 			sprite_shader.use().set_integer("text", 0);
 			sprite_shader.set_matrix4("projection", projection);
+			sprite_shader.set_matrix4("view", view);
 
 			text_renderer = std::make_unique<TextRenderer>(resource_manager->load_shader("text.vert", "text.frag", "", "text"));
 			auto& text_shader = resource_manager->get_shader("text");
 			text_shader.use().set_integer("text", 0);
 			text_shader.set_matrix4("projection", projection);
+			//text_shader.use().set_matrix4("view", view);
 
 			shape_renderer = std::make_unique<ShapeRenderer>(resource_manager->load_shader("shape.vert", "shape.frag", "", "shape"));
 			auto& shape_shader = resource_manager->get_shader("shape");
 			shape_shader.use().set_matrix4("projection", projection);
+			shape_shader.set_matrix4("view", view);
 		}
 
-		template <IntVectorType T = glm::ivec2>
-		void set_resolution(T game_resolution = { 0, 0 })
+		template <VectorType T = glm::vec2>
+		void set_camera(T pos, float rotation)
 		{
-			this->game_resolution.x = game_resolution.x;
-			this->game_resolution.y = game_resolution.y;
-		}
-		
-		void set_resolution(int width = 0, int height = 0)
-		{
-			this->game_resolution.x = width;
-			this->game_resolution.y = height;
-		}
+			glm::mat4 view = glm::inverse(build_view_matrix(pos, rotation));
 
+			resource_manager->get_shader("shape").use().set_matrix4("view", view);
+			resource_manager->get_shader("sprite").use().set_matrix4("view", view);
+		}
 
 		/** \overload */
 		void clear()
@@ -240,7 +260,7 @@ namespace OdisEngine
 
 		/**
 		 * \overload
-		 * 
+		 *
 		 * \tparam color value fulfilling the concept OdisEngine::ColorTypeRGB
 		 * \param a float value representing the alpha component of the color
 		 */
@@ -251,80 +271,86 @@ namespace OdisEngine
 		}
 
 		/** \overload */
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color)
 		{
 			draw_rect(pos, size, color, 0.0f, 1.0f);
 		}
 
 		/** \overload */
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color, float rotation)
 		{
 			draw_rect(pos, size, color, rotation, 1.0f);
 		}
-		
+
 		///Draws a rectangle
 		/**
 		 * \tparam pos value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
 		 * \tparam size value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
 		 * \tparam color value fulfilling the concept OdisEngine::ColorTypeRGB, defaults to glm::vec3. valid values range from 0 to 1
-		 * \param rotation float value representing the rotation in degrees 
+		 * \param rotation float value representing the rotation in degrees
 		 * \param alpha float value representing the alpha of the rectangle, valid values range from 0 to 1
 		 */
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_rect(T1 pos, T1 size, T2 color, float rotation, float alpha)
 		{
-			shape_renderer->draw_rect(pos, size, color, rotation, alpha);
+			shape_renderer->draw_rect(glm::ivec2{ static_cast<int>(pos.x), static_cast<int>(pos.y) }, glm::ivec2{ static_cast<int>(size.x), static_cast<int>(size.y) }, color, rotation, alpha);
 		}
 
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
-		void draw_circle(T1 pos, float radius, T2 color)
-		{
 
-		}
-
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_polygon(T1 pos, float radius, size_t num_sides, T2 color)
 		{
 			this->draw_polygon(pos, radius, num_sides, color, 0.0f);
 		}
 
-		template <IntVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_polygon(T1 pos, float radius, size_t num_sides, T2 color, float rotation)
 		{
-			shape_renderer->draw_polygon(pos, radius, num_sides, color, rotation);
+			shape_renderer->draw_polygon(glm::ivec2{ static_cast<int>(pos.x), static_cast<int>(pos.y) }, radius, num_sides, color, rotation);
 		}
 
+		///Draws a texture
 		/**
 		 * .
-		 * 
-		 * \param texture Texture2D the texture to be drawn 
+		 *
+		 * \param texture Texture2D the texture to be drawn
 		 * \tparam pos value fulfilling the concept OdisEngine::IntVectorType, defaults to glm::ivec2
-		 * \param rotation float value representing the rotation in degrees 
+		 * \param rotation float value representing the rotation in degrees
 		 */
-		template <IntVectorType T = glm::ivec2>
+		template <VectorType T = glm::vec2>
 		void draw_texture(Texture& texture, T pos, float rotation = 0.0f)
 		{
-			sprite_renderer->draw_texture(texture, pos, rotation);
+			sprite_renderer->draw_texture(texture, glm::ivec2{ static_cast<int>(pos.x), static_cast<int>(pos.y) }, rotation);
 		}
 
-		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		/** \overload */
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos)
 		{
-			draw_text(text, pos, T2{1.0f, 1.0f, 1.0f}, 1.0f);
+			draw_text(text, pos, T2{ 1.0f, 1.0f, 1.0f }, 1.0f);
 		}
 
-		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		/** \overload */
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos, T2 color)
 		{
 			draw_text(text, pos, color, 1.0f);
 		}
 
-		template <FloatVectorType T1 = glm::ivec2, ColorTypeRGB T2 = glm::vec3>
+		/**
+		 * Draws text
+		 *
+		 * \param text
+		 * \param pos
+		 * \param color
+		 * \param scale
+		 */
+		template <VectorType T1 = glm::vec2, ColorTypeRGB T2 = glm::vec3>
 		void draw_text(std::string text, T1 pos, T2 color, float scale)
 		{
-			text_renderer->draw_text(text, pos, color, scale);
+			text_renderer->draw_text(text, glm::ivec2{ static_cast<int>(pos.x), static_cast<int>(pos.y) }, color, scale);
 		}
 
 

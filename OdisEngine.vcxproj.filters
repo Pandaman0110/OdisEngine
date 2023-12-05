@@ -44,9 +44,6 @@
     <ClInclude Include="include\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\InputEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>

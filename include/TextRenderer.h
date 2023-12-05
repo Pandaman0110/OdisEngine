@@ -40,7 +40,7 @@ namespace OdisEngine
 
         void load_font(Font& font) { this->font = font; };
 
-        template <FloatVectorType T1, ColorTypeRGB T2 = ColorRGB>
+        template <VectorType T1, ColorTypeRGB T2 = ColorRGB>
 		void draw_text(std::string text, T1 pos, T2 color, float scale)
 		{
             this->shader.use();
@@ -80,7 +80,7 @@ namespace OdisEngine
                 // render quad
                 glDrawArrays(GL_TRIANGLES, 0, 6);
                 // now advance cursors for next glyph
-                pos.x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
+                pos.x += static_cast<int>((ch.advance >> 6) * scale); // bitshift by 6 to get value in pixels (1/64th times 2^6 = 64)
             }
             glBindVertexArray(0);
             glBindTexture(GL_TEXTURE_2D, 0);

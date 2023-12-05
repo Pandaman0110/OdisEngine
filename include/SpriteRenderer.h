@@ -44,7 +44,7 @@ namespace OdisEngine
 			mesh.set_vertices(vertices, 4);
 		};
 
-		template <IntVectorType T>
+		template <VectorType T>
 		void draw_texture(Texture& texture, T position, float rotation)
 		{
 			shader.use();
@@ -67,13 +67,13 @@ namespace OdisEngine
 			mesh.draw(6);
 		}
 
-		template <IntVectorType T>
+		template <VectorType T>
 		void draw_texture(Texture& texture, T position, int d)
 		{
 
 		}
 
-		template <IntVectorType T>
+		template <VectorType T>
 		void draw_texture_sliced(Texture& texture, T pos, int border, float rotation)
 		{
 			
