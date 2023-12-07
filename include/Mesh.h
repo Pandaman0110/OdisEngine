@@ -51,10 +51,10 @@ namespace OdisEngine
 		};
 	public:
 		Mesh() {};
-		~Mesh() 
+
+		void erase() 
 		{
 			glDeleteVertexArrays(1, &this->vao);
-
 		};
 
 		template <std::integral ... Args>

@@ -13,45 +13,47 @@ namespace OdisEngine
     {
     public:
         // holds the ID of the texture object, used for all texture operations to reference to this particular texture
-        uint32_t ID;
+        unsigned int id;
         // texture image dimensions
-        uint32_t w, h; // width and height of loaded image in pixels
+        int w, h; // width and height of loaded image in pixels
         // texture Format
-        uint32_t interal_format; // format of texture object
-        uint32_t image_format; // format of loaded image
+        int internal_format; // format of texture object
+        int image_format; // format of loaded image
         // texture configuration
-        uint32_t wrap_s; // wrapping mode on S axis
-        uint32_t wrap_t; // wrapping mode on T axis
-        uint32_t filter_min; // filtering mode if texture pixels < screen pixels
-        uint32_t filter_max; // filtering mode if texture pixels > screen pixels
+        int wrap_s; // wrapping mode on S axis
+        int wrap_t; // wrapping mode on T axis
+        int filter_min; // filtering mode if texture pixels < screen pixels
+        int filter_max; // filtering mode if texture pixels > screen pixels
         //name
         std::string name;
         // constructor (sets default texture modes)
-        Texture()
-            : w(0), h(0), interal_format(GL_RGB), image_format(GL_RGB), wrap_s(GL_REPEAT), wrap_t(GL_REPEAT), filter_min(GL_LINEAR), filter_max(GL_LINEAR)
+        Texture(int w, int h, uint8_t* data)
+            : w(w), h(h), internal_format(GL_RGBA), image_format(GL_RGBA), wrap_s(GL_REPEAT), wrap_t(GL_REPEAT), filter_min(GL_LINEAR), filter_max(GL_LINEAR)
         {
-            glGenTextures(1, reinterpret_cast<GLuint*>(&this->ID));
-        }
-        // generates texture from image data
-        void generate(uint32_t w, uint32_t h, uint8_t* data)
-        {
-            this->w = w;
-            this->h = h;
+            glGenTextures(1, &id);
+
             // create Texture
-            glBindTexture(GL_TEXTURE_2D, this->ID);
-            glTexImage2D(GL_TEXTURE_2D, 0, this->interal_format, this->w, this->w, 0, this->image_format, GL_UNSIGNED_BYTE, data);
+            bind();
+            glTexImage2D(GL_TEXTURE_2D, 0, internal_format, w, w, 0, image_format, GL_UNSIGNED_BYTE, data);
             // set Texture wrap and filter modes
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap_s);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap_t);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filter_min);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filter_max);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_max);
+
             // unbind texture
             glBindTexture(GL_TEXTURE_2D, 0);
         }
+
+        void erase()
+        {
+            glDeleteTextures(1, &id);
+        }
+    
         // binds the texture as the current active GL_TEXTURE_2D texture object
         void bind() const
         {
-            glBindTexture(GL_TEXTURE_2D, this->ID);
+            glBindTexture(GL_TEXTURE_2D, id);
         }
     };
 }

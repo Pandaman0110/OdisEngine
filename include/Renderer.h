@@ -15,6 +15,7 @@
 #include "SpriteRenderer.h"
 #include "TextRenderer.h"
 #include "ShapeRenderer.h"
+#include "FrameBufferRenderer.h"
 #include "Log.h"
 
 #include "utility/OdisMath.h"
@@ -62,6 +63,7 @@ namespace OdisEngine
 		std::unique_ptr<SpriteRenderer> sprite_renderer;
 		std::unique_ptr<TextRenderer> text_renderer;
 		std::unique_ptr<ShapeRenderer> shape_renderer;
+		std::unique_ptr<FrameBufferRenderer> frame_buffer_renderer;
 
 		glm::ivec2 game_resolution;
 		ScaleMode scale_mode;
@@ -207,11 +209,34 @@ namespace OdisEngine
 			text_shader.set_matrix4("projection", projection);
 			//text_shader.use().set_matrix4("view", view);
 
+			frame_buffer_renderer = std::make_unique<FrameBufferRenderer>(resource_manager->load_shader("screen.vert", "screen.frag", "", "screen"));
+			auto& frame_buffer_renderer = resource_manager->get_shader("text");
+			frame_buffer_renderer.use().set_integer("screen_texture", 0);
+
 			shape_renderer = std::make_unique<ShapeRenderer>(resource_manager->load_shader("shape.vert", "shape.frag", "", "shape"));
 			auto& shape_shader = resource_manager->get_shader("shape");
 			shape_shader.use().set_matrix4("projection", projection);
 			shape_shader.set_matrix4("view", view);
 		}
+
+		void draw_to_frame_buffer(FrameBuffer& frame_buffer)
+		{
+			frame_buffer_renderer->begin_draw(frame_buffer);
+			clear();
+		}
+
+		void end_frame_buffer_draw()
+		{
+			frame_buffer_renderer->end_draw();
+		}
+
+		template <VectorType T = glm::vec2>
+		void draw_frame_buffer(FrameBuffer& frame_buffer, T position, T scale, float rotation)
+		{
+
+			frame_buffer_renderer->draw_frame_buffer(frame_buffer, position, scale, rotation);
+		}
+
 
 		template <VectorType T = glm::vec2>
 		void set_camera(T pos, float rotation)
@@ -225,7 +250,7 @@ namespace OdisEngine
 		/** \overload */
 		void clear()
 		{
-			clear(1.0f, 1.0f, 1.0f, 1.0f);
+			clear(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		/** \overload */

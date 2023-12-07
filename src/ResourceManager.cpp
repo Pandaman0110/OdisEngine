@@ -22,9 +22,9 @@ GLSLShader& ResourceManager::load_shader(const std::string& v_shader_file_name, 
 }
 
 
-Texture& ResourceManager::load_texture(const std::string& file_name, bool alpha, std::string name)
+Texture& ResourceManager::load_texture(const std::string& file_name, std::string name)
 {
-    textures.insert({ name, std::move(load_texture_from_file(file_name, alpha)) });
+    textures.insert({ name, load_texture_from_file(file_name) });
     return get_texture(name);
 }
 
@@ -33,6 +33,12 @@ Font& ResourceManager::load_font(const std::string& file_name, uint8_t height, s
 {
     fonts.insert({ name, load_font_from_file(file_name, height) });
     return get_font(name);
+}
+
+FrameBuffer& ResourceManager::load_framebuffer(int w, int h, std::string name)
+{
+    frame_buffers.insert({ name, FrameBuffer{w, h} });
+    return get_frame_buffer(name);
 }
 
 GLSLShader& ResourceManager::get_shader(const std::string& name)
@@ -51,6 +57,11 @@ Font& ResourceManager::get_font(const std::string& name)
     return fonts.at(name);
 }
 
+FrameBuffer& ResourceManager::get_frame_buffer(const std::string& name)
+{
+    return frame_buffers.at(name);
+}
+
 void ResourceManager::clear()
 {
     // (properly) delete all shaders	
@@ -58,7 +69,7 @@ void ResourceManager::clear()
         glDeleteProgram(iter.second.ID);
     // (properly) delete all textures
     for (auto &iter : textures)
-        glDeleteTextures(1, (GLuint*)&iter.second.ID);
+        glDeleteTextures(1, (GLuint*)&iter.second.id);
     
     shaders.clear();
     textures.clear();
@@ -109,24 +120,15 @@ GLSLShader ResourceManager::load_shader_from_file(const std::string& v_shader_fi
     return shader;
 }
 
-Texture ResourceManager::load_texture_from_file(const std::string& file_name, bool alpha)
+Texture ResourceManager::load_texture_from_file(const std::string& file_name)
 {
-    // create texture object
-
-    Texture texture;
-    if (alpha)
-    {
-        texture.interal_format = GL_RGBA;
-        texture.image_format = GL_RGBA;
-    }
-
     // load image
     int width, height, nr_channels;
 
-    unsigned char* data = SOIL_load_image(file_name.c_str(), &width, &height, &nr_channels, 0);
+   uint8_t* data = SOIL_load_image(file_name.c_str(), &width, &height, &nr_channels, 0);
 
     //now generate texture
-    texture.generate(width, height, data);
+    Texture texture{ width, height, data};
 
     // and finally free image data
     SOIL_free_image_data(data);

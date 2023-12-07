@@ -158,6 +158,12 @@
     <ClInclude Include="external\toml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FrameBufferRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="external\glfw3.lib" />
@@ -195,6 +201,8 @@
     <None Include="shaders\text.vert" />
     <None Include="shaders\shape.frag" />
     <None Include="shaders\shape.vert" />
+    <None Include="shaders\screen.frag" />
+    <None Include="shaders\screen.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="catgreyidle.png">
