@@ -32,7 +32,7 @@ namespace OdisEngine
 		template <typename Rt>
 		Rt load_toml_value(std::filesystem::path path, std::string_view toml_path)
 		{
-			auto ch = logger->get("FileSystem");
+			auto ch = logger->get("OdisEngine");
 
 			toml::parse_result result = toml::parse(load_file(path));
 
@@ -62,7 +62,7 @@ namespace OdisEngine
 		template <typename T>
 		std::vector<T> load_toml_array(std::filesystem::path path, std::string_view toml_path)
 		{
-			auto ch = logger->get("FileSystem");
+			auto ch = logger->get("OdisEngine");
 
 			toml::parse_result result = toml::parse(load_file(path));
 
@@ -100,7 +100,7 @@ namespace OdisEngine
 		template <typename T>
 		std::map<std::string, T> load_toml_map(std::filesystem::path path, std::string_view toml_path)
 		{
-			auto ch = logger->get("FileSystem");
+			auto ch = logger->get("OdisEngine");
 
 			toml::parse_result result = toml::parse(load_file(path));
 

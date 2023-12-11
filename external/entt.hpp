@@ -1751,7 +1751,7 @@ struct iterable_adaptor final {
 
     /**
      * @brief Returns an iterator to the beginning.
-     * @return An iterator to the first element of the range.
+     * @return An iterator to the first element of the  .
      */
     [[nodiscard]] constexpr iterator begin() const noexcept {
         return first;

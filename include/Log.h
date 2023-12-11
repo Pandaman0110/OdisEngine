@@ -2,9 +2,11 @@
 #define ODISLOG_H
 
 #include <iostream>
-#include <map>
 #include <format>
-
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
 
 namespace OdisEngine
 {
@@ -17,8 +19,9 @@ namespace OdisEngine
 		debug,
 	};
 
-	constexpr LogLevel DEFAULT_LOG_FILTER_LEVEL = LogLevel::debug;
-	constexpr LogLevel DEFAULT_LOG_DEFAULT_LEVEL = LogLevel::debug;
+	constexpr LogLevel default_filter_level = LogLevel::debug;
+	constexpr LogLevel default_log_level = LogLevel::debug;
+	const std::string default_log_name = "Log";
 
 	inline std::ostream& operator <<(std::ostream& os, const LogLevel& level)
 	{
@@ -45,7 +48,7 @@ namespace OdisEngine
 	}
 
 	template <typename T>
-	concept Printable = requires (std::ostream& os, T out)
+	concept Printable = requires (std::ostream & os, T out)
 	{
 		os << out;
 	};
@@ -61,43 +64,53 @@ namespace OdisEngine
 		return (static_cast<int>(level) <= static_cast<int>(filter_level));
 	}
 
-	/**
-	 * Channel object to log stuff with
-	 * 
-	 */
-	class Channel
+	constexpr std::size_t max_buffer_size = 1024;
+
+	class Logger
 	{
 	private:
+
+		///map of channel names to the channel instances
+		std::vector<Logger> sub_loggers;
+
 		/// the default OdisEngine::LogLevel of the channel.
-		LogLevel default_level = DEFAULT_LOG_DEFAULT_LEVEL;
+		LogLevel default_level = default_log_level;
 
 		/// the filter OdisEngine::LogLevel for messages.
-		LogLevel filter_level = DEFAULT_LOG_FILTER_LEVEL;
+		LogLevel filter_level = default_filter_level;
 
-		/// the name of the channel.
-		std::string name;
+		/// buffer to store logging messages.
+		std::stringstream buffer;
+	protected:
 
+		/// optional name to be printed with the log message.
+		std::string name = "";
 	public:
-
-		constexpr Channel(std::string name) :
-			name(name)
-		{};
-
-		constexpr Channel(std::string name, LogLevel filter_level) :
+		Logger(std::string name, LogLevel filter_level, LogLevel default_level) :
 			name(name),
-			filter_level(filter_level)
+			filter_level(filter_level),
+			default_level(default_level)
 		{};
 
-		constexpr Channel(std::string name, LogLevel filter_level, LogLevel default_level) : 
-			name(name),
-			filter_level(filter_level), 
-			default_level(default_level) 
+		Logger(std::string name, LogLevel filter_level) :
+			Logger(name, filter_level, default_log_level)
 		{};
-		
+
+		Logger(std::string name) :
+			Logger(name, default_filter_level, default_log_level)
+		{};
+
+		Logger() :
+			Logger(default_log_name, default_filter_level, default_log_level)
+		{};
+
+		template <Printable T>
+		std::ostream& operator <<(const T&& arg) { buffer << arg; };
+
 		/// %Log stuff with a OdisEngine::LogLevel and OdisEngine::Printable values.
 		/**
 		 * this function flushes the buffer.
-		 * 
+		 *
 		 * \param level the OdisEngine::LogLevel of the log message.
 		 * \tparam args comma seperated list of OdisEngine::Printable values.
 		 */
@@ -106,13 +119,15 @@ namespace OdisEngine
 		{
 			if (valid_level(level, filter_level))
 			{
-				std::cout << name << ": ";
-				std::cout << level << " - ";
-				((std::cout << std::forward<Args>(args) << " "), ...);
-				std::cout << std::endl;
+				buffer << "[" << name << "] ";
+				buffer << level << " - ";
+				((buffer << std::forward<Args>(args) << " "), ...);
+				buffer << "\n";
 			}
+
+			buffer.flush();
 		}
-		
+
 		/// %Log stuff using a format string like std::print or printf
 		/**
 		 * This function will cause a compile time error if fmt is not a valid std::format_string
@@ -138,145 +153,97 @@ namespace OdisEngine
 			log(default_level, std::forward<Args>(args)...);
 		}
 
-	
 
-		/// sets the current OdisEngine::Channel::filter_level
+		/** %Log stuff with the default OdisEngine::LogLevel and OdisEngine::Printable values.
+		 *
+		 * Uses the default OdisEngine::LogLevel
+		 * \overload.
+		 */
+		 /*
+		 template <Printable ...Args>
+		 void logf(Args&& ...args)
+		 {
+			 logf(default_level, std::forward<Args>(args)...);
+		 };
+		 */
+
+		 /// sets the current OdisEngine::Logger::filter_level
 		constexpr void set_filter(LogLevel level) { filter_level = level; };
 
-		/// sets the current OdisEngine::Channel::default_level
+		/// sets the current OdisEngine::Logger::default_level
 		constexpr void set_default(LogLevel level) { default_level = level; };
-	};
 
-	/// An object to manage a collection of OdisEngine::Channel
-	/**
-	 * One of these bad boys is extern declared in Log.h, make sure to define this value before anything else.
-	 * There should probably only be one of these.
-	 * This object handles the memory for the Channels, you do NOT have to manage the Channels memory.
-	 */
-	class Log
-	{
-	private:
-		///map of channel names to the channel instances
-		std::map<std::string, std::unique_ptr<Channel>> channels;
-		
-		/// the default OdisEngine::LogLevel of the channel.
-		LogLevel default_level = DEFAULT_LOG_DEFAULT_LEVEL;
-
-		/// the filter OdisEngine::LogLevel for messages.
-		LogLevel filter_level = DEFAULT_LOG_FILTER_LEVEL;
-
-		std::string name = "Log";
-
-
-	public:
-		Log()
+		/// accesses the message buffer
+		std::streambuf* rdbuf()
 		{
-			create("FileSystem");
+			if (sub_loggers.size() == 0)
+				return buffer.rdbuf();
+
+			for (auto& logger : sub_loggers)
+				buffer << logger.rdbuf();
+
+			return this->rdbuf();
 		};
 
-		/// %Log stuff with a OdisEngine::LogLevel and OdisEngine::Printable values.
+
+		////////////////////////
+
+
+		/** \overload */
+		Logger* create(const std::string& name)
+		{
+			return create(name, default_filter_level, default_log_level);
+		}
+
+		/** \overload */
+		Logger* create(const std::string& name, LogLevel filter_level)
+		{
+			return create(name, filter_level, default_log_level);
+		}
+
+		/// Creates a sub logger and returns a pointer to it
 		/**
-		 * this function flushes the buffer.
+		 * If the OdisEngine::Logger already exists, then nothing is done.
 		 *
-		 * \param log_level the OdisEngine::LogLevel of the log message.
-		 * \tparam args comma seperated list of OdisEngine::Printable values.
+		 * \param name name of the OdisEngine::Logger to create
+		 * \param filter_level the filter OdisEngine::LogLevel to construct the OdisEngine::Logger object with
+		 * \param default_level the default OdisEngine::LogLevel to construct the OdisEngine::Logger object with
+		 * \return a pointer to a OdisEngine::Logger object
 		 */
-		template <Printable...Args>
-		void log(LogLevel level, Args&&...args)
+		Logger* create(const std::string& name, LogLevel filter_level, LogLevel default_level)
 		{
-			if (valid_level(level, filter_level))
-			{
-				std::cout << name << ": ";
-				std::cout << level << " - ";
-				((std::cout << std::forward<Args>(args) << " "), ...);
-				std::cout << std::endl;
-			}
+			sub_loggers.push_back(Logger{ name, filter_level, default_level });
+			return get(name);
 		}
 
-		/// %Log stuff using a format string like std::print or printf
+		/// Gets an already constructed sub logger
 		/**
-		 * This function will cause a compile time error if fmt is not a valid std::format_string
-		 * 
-		 * \param level the OdisEngine::LogLevel of the log message.
-		 * \param fmt the format string
-		 * \tparam args comma seperated list of OdisEngine::Printable values.
+		 * The sub logger should be previously created with OdisEngine::Log::create()
+		 *
+		 * \param name name of the OdisEngine::Logger to create
+		 * \return a pointer to a OdisEngine::Logger object
 		 */
-		template <Printable ...Args>
-		void logf(LogLevel level, const std::format_string<Args...> fmt, Args&& ...args)
+		Logger* get(const std::string& name)
 		{
-			log(level, std::vformat(fmt.get(), std::make_format_args(std::forward<Args>(args)...)));
+			//find the logger with the name in the sub loggers vector
+			auto it = std::find_if(sub_loggers.begin(), sub_loggers.end(), [=](Logger& logger) { return logger.name == name; });
+			return &(*it);
 		}
 
-		/// %Log stuff with the default OdisEngine::LogLevel and OdisEngine::Printable values.
+		/// Deletes a sub logger
 		/**
-		 * Uses the default OdisEngine::LogLevel.
-		 * \overload.
+		 * \param name name of the OdisEngine::Logger to create
 		 */
-		template <Printable...Args>
-		void log(Args&&...args)
+		void erase(const std::string& name)
 		{
-			log(default_level, std::forward<Args>(args)...);
+			//erase the logger with the name in the sub loggers vector
+			sub_loggers.erase(std::remove_if(sub_loggers.begin(), sub_loggers.end(), [=](Logger& logger) { return logger.name == name; }));
 		}
 
-
-		/** \overload */
-		Channel* create(const std::string& channel_name)
-		{
-			channels.insert({ channel_name, std::make_unique<Channel>(channel_name) });
-			return get(channel_name);
-		}
-
-		/** \overload */
-		Channel* create(const std::string& channel_name, LogLevel filter_level)
-		{
-			channels.insert({ channel_name, std::make_unique<Channel>(channel_name, filter_level) });
-			return get(channel_name);
-		}
-
-		/// Creates a channel and returns a pointer to it
-		/**
-		 * If the OdisEngine::Channel already exists, then nothing is done.
-		 * 
-		 * \param channel_name name of the OdisEngine::Channel to create
-		 * \param filter_level the filter OdisEngine::LogLevel to construct the OdisEngine::Channel object with
-		 * \param default_level the default OdisEngine::LogLevel to construct the OdisEngine::Channel object with
-		 * \return a pointer to a OdisEngine::Channel object
-		 */
-		Channel* create(const std::string& channel_name, LogLevel filter_level, LogLevel default_level)
-		{
-			channels.insert({ channel_name, std::make_unique<Channel>(channel_name, filter_level, default_level) });
-			return get(channel_name);
-		}
-
-		/// Gets an already constructed channel
-		/**
-		 * The channel should be previously created with OdisEngine::Log::create()
-		 * 
-		 * \param channel_name name of the OdisEngine::Channel to create
-		 * \return a pointer to a OdisEngine::Channel object
-		 */
-		Channel* get (const std::string& channel_name) const
-		{
-			return channels.at(channel_name).get();
-		}
-
-		/// Deletes a channel
-		/**
-		 * \param channel_name name of the OdisEngine::Channel to create
-		 */
-		void delete_channel(const std::string& channel_name)
-		{
-			channels.erase(channel_name);
-		}
-
-		/// sets the current OdisEngine::Channel::filter_level
-		constexpr void set_filter(LogLevel level) { filter_level = level; };
-
-		/// sets the current OdisEngine::Channel::default_level
-		constexpr void set_default(LogLevel level) { default_level = level; };
+		
 	};
-}
+};
 
-extern std::unique_ptr<OdisEngine::Log> logger;
+extern std::unique_ptr<OdisEngine::Logger> logger;
 
 #endif
