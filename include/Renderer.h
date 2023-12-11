@@ -219,6 +219,17 @@ namespace OdisEngine
 			shape_shader.set_matrix4("view", view);
 		}
 
+		///Flushes the command buffers
+		/**
+		 * Call at the end of the frame to ensure all draw calls have gone through
+		 * 
+		 * 
+		 */
+		void flush()
+		{
+			shape_renderer->flush();
+		}
+
 		void draw_to_frame_buffer(FrameBuffer& frame_buffer)
 		{
 			frame_buffer_renderer->begin_draw(frame_buffer);
@@ -335,6 +346,9 @@ namespace OdisEngine
 		{
 			shape_renderer->draw_polygon(glm::ivec2{ static_cast<int>(pos.x), static_cast<int>(pos.y) }, radius, num_sides, color, rotation);
 		}
+
+		//Draws a circle
+		
 
 		///Draws a texture
 		/**

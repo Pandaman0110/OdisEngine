@@ -101,10 +101,25 @@ namespace OdisEngine
 			glBindVertexArray(vao);
 
 			const int offset = 0;
-			glDrawArrays(static_cast<int>(draw_mode), 0, static_cast<GLsizei>(count));
+			glDrawArrays(static_cast<int>(draw_mode), offset, static_cast<GLsizei>(count));
 			//std::cout << static_cast<GLsizei>(vertices.size() / stride) << '\n';
 
 			glBindVertexArray(0);
+		}
+
+		void draw_instanced(DrawMode draw_mode, size_t count, size_t instance_count)
+		{
+			glBindVertexArray(vao);
+
+			const int offset = 0;
+			glDrawArraysInstanced(static_cast<int>(draw_mode), offset, static_cast<GLsizei>(count), static_cast<GLsizei>(instance_count));
+
+			glBindVertexArray(0);
+		}
+
+		void bind()
+		{
+			glBindVertexArray(vao);
 		}
 
 		size_t size() const { return vertices.size() / 2; };

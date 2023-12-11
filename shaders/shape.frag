@@ -1,9 +1,10 @@
 #version 460 core
 
+in vec4 shape_color;
+
 out vec4 color;
-uniform vec4 shape_color;
 
 void main()
 {
-    color = vec4(shape_color);
+    color = shape_color;
 } 
