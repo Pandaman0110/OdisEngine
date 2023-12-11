@@ -176,13 +176,16 @@ namespace OdisEngine
 		/// accesses the message buffer
 		std::streambuf* rdbuf()
 		{
-			if (sub_loggers.size() == 0)
-				return buffer.rdbuf();
+			std::vector<std::streambuf*> sub_loggers_buffers;
+			if (sub_loggers.size() != 0)
+			{
+				for (auto& logger : sub_loggers)
+					sub_loggers_buffers.push_back(logger.rdbuf());
 
-			for (auto& logger : sub_loggers)
-				buffer << logger.rdbuf();
-
-			return this->rdbuf();
+				for (auto& sub_logger_buffer : sub_loggers_buffers)
+					buffer << sub_logger_buffer;
+			}
+			return buffer.rdbuf();
 		};
 
 
@@ -240,7 +243,7 @@ namespace OdisEngine
 			sub_loggers.erase(std::remove_if(sub_loggers.begin(), sub_loggers.end(), [=](Logger& logger) { return logger.name == name; }));
 		}
 
-		
+
 	};
 };
 
