@@ -4,6 +4,7 @@
 #include <iostream>
 #include <format>
 #include <string>
+#include <memory>
 #include <sstream>
 #include <algorithm>
 #include <vector>
@@ -81,6 +82,7 @@ namespace OdisEngine
 
 		/// buffer to store logging messages.
 		std::stringstream buffer;
+		std::stringstream archive;
 	protected:
 
 		/// optional name to be printed with the log message.
@@ -105,7 +107,7 @@ namespace OdisEngine
 		{};
 
 		template <Printable T>
-		std::ostream& operator <<(const T&& arg) { buffer << arg; };
+		std::stringstream& operator <<(const T&& arg) { buffer << arg; };
 
 		/// %Log stuff with a OdisEngine::LogLevel and OdisEngine::Printable values.
 		/**
@@ -174,18 +176,20 @@ namespace OdisEngine
 		constexpr void set_default(LogLevel level) { default_level = level; };
 
 		/// accesses the message buffer
-		std::streambuf* rdbuf()
+		std::stringstream buf()
 		{
-			std::vector<std::streambuf*> sub_loggers_buffers;
-			if (sub_loggers.size() != 0)
-			{
-				for (auto& logger : sub_loggers)
-					sub_loggers_buffers.push_back(logger.rdbuf());
+			std::stringstream temp;
 
-				for (auto& sub_logger_buffer : sub_loggers_buffers)
-					buffer << sub_logger_buffer;
-			}
-			return buffer.rdbuf();
+			temp << buffer.str();
+			archive << temp.str();
+
+			buffer.str(std::string{});
+
+			if (sub_loggers.size() > 0)
+				for (auto& logger : sub_loggers)
+					temp << logger.buf().str();
+
+			return temp;
 		};
 
 
@@ -242,9 +246,13 @@ namespace OdisEngine
 			//erase the logger with the name in the sub loggers vector
 			sub_loggers.erase(std::remove_if(sub_loggers.begin(), sub_loggers.end(), [=](Logger& logger) { return logger.name == name; }));
 		}
-
-
 	};
+
+	inline std::ostream& operator <<(std::ostream& os, Logger& logger)
+	{
+		os << logger.buf().str();
+		return os;
+	}
 };
 
 extern std::unique_ptr<OdisEngine::Logger> logger;

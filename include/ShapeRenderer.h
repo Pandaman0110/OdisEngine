@@ -14,7 +14,7 @@
 #include "Color.h"
 #include "Mesh.h"
 
-constexpr size_t max_instances = 1024;
+constexpr size_t max_instances = 4096;
 
 namespace OdisEngine
 {

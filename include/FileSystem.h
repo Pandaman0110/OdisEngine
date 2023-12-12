@@ -59,9 +59,12 @@ namespace OdisEngine
 			return toml_thing.value();
 		}
 
-		template <typename T>
+		template <typename T = int64_t>
 		std::vector<T> load_toml_array(std::filesystem::path path, std::string_view toml_path)
 		{
+			//if constexpr (std::integral<T>)
+				//static_assert(sizeof(T) >= sizeof(std::int64_t), "Integral type must be greater than or equal to 64 bits");
+
 			auto ch = logger->get("OdisEngine");
 
 			toml::parse_result result = toml::parse(load_file(path));
@@ -77,7 +80,7 @@ namespace OdisEngine
 
 			auto toml_thing = result.at_path(toml_path).as_array();
 
-			if (toml_thing and toml_thing->is_homogeneous<T>())
+			if (toml_thing)
 			{
 				ch->logf(LogLevel::info, "{} \"{}\" {}", "Toml array at", toml_path, "succesfully loaded");
 			}
@@ -100,6 +103,9 @@ namespace OdisEngine
 		template <typename T>
 		std::map<std::string, T> load_toml_map(std::filesystem::path path, std::string_view toml_path)
 		{
+			//if constexpr (std::integral<T>)
+			//	static_assert(sizeof(T) >= sizeof(std::int64_t), "Integral type must be greater than or equal to 64 bits");
+
 			auto ch = logger->get("OdisEngine");
 
 			toml::parse_result result = toml::parse(load_file(path));
@@ -115,7 +121,7 @@ namespace OdisEngine
 
 			auto toml_thing = result.at_path(toml_path).as_table();
 
-			if (toml_thing and toml_thing->is_homogeneous<T>())
+			if (toml_thing)
 			{
 				ch->logf(LogLevel::info, "{} \"{}\" {}", "Toml map at", toml_path, "succesfully loaded");
 			}
