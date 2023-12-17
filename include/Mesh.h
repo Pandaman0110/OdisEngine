@@ -16,11 +16,24 @@
 
 namespace OdisEngine
 {
-	enum class DrawMode
+	enum class DrawPrimitive
 	{
 		triangles = GL_TRIANGLES,
 		triangle_fans = GL_TRIANGLE_FAN,
 		triangle_strip = GL_TRIANGLE_STRIP,
+		quads = GL_QUADS,
+		points = GL_POINTS,
+		lines = GL_LINES,
+		line_strip = GL_LINE_STRIP,
+		line_loop = GL_LINE_LOOP,
+		patches = GL_PATCHES,
+	};
+
+	enum class DrawMode
+	{
+		dynamic_draw = GL_DYNAMIC_DRAW,
+		static_draw = GL_STATIC_DRAW,
+		stream_draw = GL_STREAM_DRAW,
 	};
 
 	class Mesh
@@ -58,7 +71,7 @@ namespace OdisEngine
 		};
 
 		template <std::integral ... Args>
-		void set_vertices(std::vector<float> vertices, Args ... args)
+		void set_vertices(std::vector<float> vertices, DrawMode draw_mode, Args ... args)
 		{
 			this->vertices.clear();
 			this->vertices.shrink_to_fit();
@@ -70,12 +83,18 @@ namespace OdisEngine
 			glBindVertexArray(vao);
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float) , this->vertices.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), this->vertices.data(), static_cast<int>(draw_mode));
 
 			set_vertex_attributes({ args... });
 
 			glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+
+		template <std::integral ... Args>
+		void set_vertices(std::vector<float> vertices, Args ... args)
+		{
+			set_vertices(vertices, DrawMode::static_draw, std::forward<Args>(args)...);
 		}
 		
 		void set_indices(std::span<unsigned int> indices)
@@ -93,26 +112,26 @@ namespace OdisEngine
 		
 		void draw(size_t count)
 		{
-			draw(DrawMode::triangles, count);
+			draw(DrawPrimitive::triangles, count);
 		}
 
-		void draw(DrawMode draw_mode, size_t count)
+		void draw(DrawPrimitive draw_primitive, size_t count)
 		{
 			glBindVertexArray(vao);
 
 			const int offset = 0;
-			glDrawArrays(static_cast<int>(draw_mode), offset, static_cast<GLsizei>(count));
+			glDrawArrays(static_cast<int>(draw_primitive), offset, static_cast<GLsizei>(count));
 			//std::cout << static_cast<GLsizei>(vertices.size() / stride) << '\n';
 
 			glBindVertexArray(0);
 		}
 
-		void draw_instanced(DrawMode draw_mode, size_t count, size_t instance_count)
+		void draw_instanced(DrawPrimitive draw_primitive, size_t count, size_t instance_count)
 		{
 			glBindVertexArray(vao);
 
 			const int offset = 0;
-			glDrawArraysInstanced(static_cast<int>(draw_mode), offset, static_cast<GLsizei>(count), static_cast<GLsizei>(instance_count));
+			glDrawArraysInstanced(static_cast<int>(draw_primitive), offset, static_cast<GLsizei>(count), static_cast<GLsizei>(instance_count));
 
 			glBindVertexArray(0);
 		}

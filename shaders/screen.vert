@@ -5,6 +5,8 @@ layout (location = 1) in vec2 coords;
 out vec2 tex_coords;
 
 //uniform mat4 model;
+//uniform mat4 projection;
+//uniform mat4 view;
 
 void main()
 {

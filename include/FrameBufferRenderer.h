@@ -29,34 +29,26 @@ namespace OdisEngine
 				1.0f, 0.0f, 1.0f, 0.0f
 			};
 			*/
-			//mesh.set_vertices(std::move(rect_vertices), 2, 2);
+
+			//create vertices for a rectangles within -1.0 to 1.0 range
+			std::vector<float> rect_vertices
+			{
+				-1.0f,  1.0f, 0.0f, 1.0f, // top left
+				-1.0f, -1.0f, 0.0f, 0.0f, // bottom left
+				 1.0f,  1.0f, 1.0f, 1.0f, // top right
+				 1.0f, -1.0f, 1.0f, 0.0f  // bottom right
+			};
+
+			mesh.set_vertices(std::move(rect_vertices), 2, 2);
 		}
 
-		template <VectorType T>
-		void draw_frame_buffer(FrameBuffer& frame_buffer, T position, T scale, float rotation)
+		void draw_frame_buffer(FrameBuffer& frame_buffer)
 		{
 			shader.use();
 
-			std::vector<float> rect_vertices
-			{
-				-1.0f, 1.0f,-1.0f, 1.0f,
-				-1.0f,-1.0f,-1.0f,-1.0f,
-				 1.0f, 1.0f, 1.0f, 1.0f,
-				 1.0f,-1.0f, 1.0f,-1.0f
-			};
-
-			for (size_t i = 0; i < rect_vertices.size(); i += 2)
-			{
-				rect_vertices.at(i) *= scale.x ;
-				rect_vertices.at(i + 1) *= scale.y;
-			}
-
-			mesh.set_vertices(std::move(rect_vertices), 2, 2);
-				
-
 			frame_buffer.bind_texture();
 
-			mesh.draw(DrawMode::triangle_strip, mesh.size());
+			mesh.draw(DrawPrimitive::triangle_strip, mesh.size());
 		}
 
 		void begin_draw(FrameBuffer& frame_buffer)

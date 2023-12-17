@@ -42,6 +42,12 @@ namespace OdisEngine
 		return T{ (screen_size.x - game_resolution.x) / 2, (screen_size.y - game_resolution.y) / 2 };
 	}
 
+	template <VectorType T = glm::vec2>
+	float aspect_ratio(T screen_size, T resolution)
+	{
+		return std::fmin(screen_size.x / resolution.x, screen_size.y / resolution.y);
+	}
+
 	enum class ScaleMode
 	{
 		normal,
@@ -57,9 +63,27 @@ namespace OdisEngine
 			requires std::floating_point<decltype(camera.rotation())>;
 	};
 
+	template <VectorType T>
+	glm::mat4 build_view_matrix(T pos, float rotation)
+	{
+		glm::mat4 view = glm::mat4(1.0f);
+
+		view = glm::translate(view, glm::vec3(static_cast<int>(pos.x), static_cast<int>(pos.y), 0.0f));
+
+		view = glm::translate(view, glm::vec3(0.5f, 0.5f, 0.0f));
+		view = glm::rotate(view, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+		view = glm::translate(view, glm::vec3(-0.5f, -0.5f, 0.0f));
+
+		return view;
+	}
+
+	const glm::mat4 default_camera = glm::inverse(build_view_matrix(glm::vec2{ 0, 0 }, 0.0f));
+
 	class Renderer
 	{
 	private:
+		Window* window = nullptr;
+
 		std::unique_ptr<SpriteRenderer> sprite_renderer;
 		std::unique_ptr<TextRenderer> text_renderer;
 		std::unique_ptr<ShapeRenderer> shape_renderer;
@@ -68,16 +92,27 @@ namespace OdisEngine
 		glm::ivec2 game_resolution;
 		ScaleMode scale_mode;
 
+		glm::mat4 view;
+		glm::mat4 projection;
 
 		void window_size_callback(int width, int height)
 		{
 
 		}
 
-		void set_viewport(int offset_x, int offset_y, int width, int height)
+		void set_projection(float x, float y, float w, float h)
+		{
+			glm::mat4 projection = glm::ortho(x, x + w, y + h, y, 0.0f, 1.0f);
+
+			resource_manager->get_shader("shape").use().set_matrix4("projection", projection);
+			resource_manager->get_shader("sprite").use().set_matrix4("projection", projection);
+			resource_manager->get_shader("text").use().set_matrix4("projection", projection);
+		}
+
+		void set_viewport(float offset_x, float offset_y, float width, float height)
 		{
 			glViewport(offset_x, offset_y, width, height);
-			std::cout << offset_x << " " << offset_y << " " << width << " " << height << std::endl;
+			glScissor(offset_x, offset_y, width, height);
 		}
 
 		template <IntVectorType T>
@@ -171,52 +206,34 @@ namespace OdisEngine
 			c->logf(level, "Source: {}, Type: {}, ID: ({}), OpenGL Debug Message: \n{}", source_string.str(), type_string.str(), id, message);
 		}
 
-		template <VectorType T>
-		glm::mat4 build_view_matrix(T pos, float rotation)
-		{
-			glm::mat4 view = glm::mat4(1.0f);
-
-			view = glm::translate(view, glm::vec3(static_cast<int>(pos.x), static_cast<int>(pos.y), 0.0f));
-
-			view = glm::translate(view, glm::vec3(0.5f, 0.5f, 0.0f));
-			view = glm::rotate(view, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-			view = glm::translate(view, glm::vec3(-0.5f, -0.5f, 0.0f));
-
-			return view;
-		}
+		
 	public:
-		Renderer(Window* window, ScaleMode scale_mode = ScaleMode::normal) : scale_mode(scale_mode)
+		Renderer(Window* window, ScaleMode scale_mode = ScaleMode::normal) : window(window), scale_mode(scale_mode)
 		{
 			this->setup(window);
 
 			glEnable(GL_BLEND);
+			glEnable(GL_SCISSOR_TEST);
+			//glEnable(GL_DEPTH_TEST);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-			glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(window->get_window_width()), static_cast<float>(window->get_window_height()), 0.0f, -1.0f, 1.0f);
-			glm::mat4 view = glm::identity<glm::mat4>();
-
 
 			sprite_renderer = std::make_unique<SpriteRenderer>(resource_manager->load_shader("sprite.vert", "sprite.frag", "", "sprite"));
 			auto& sprite_shader = resource_manager->get_shader("sprite");
 			sprite_shader.use().set_integer("text", 0);
-			sprite_shader.set_matrix4("projection", projection);
-			sprite_shader.set_matrix4("view", view);
 
 			text_renderer = std::make_unique<TextRenderer>(resource_manager->load_shader("text.vert", "text.frag", "", "text"));
 			auto& text_shader = resource_manager->get_shader("text");
 			text_shader.use().set_integer("text", 0);
-			text_shader.set_matrix4("projection", projection);
-			//text_shader.use().set_matrix4("view", view);
 
 			frame_buffer_renderer = std::make_unique<FrameBufferRenderer>(resource_manager->load_shader("screen.vert", "screen.frag", "", "screen"));
-			auto& frame_buffer_renderer = resource_manager->get_shader("text");
+			auto& frame_buffer_renderer = resource_manager->get_shader("screen");
 			frame_buffer_renderer.use().set_integer("screen_texture", 0);
 
 			shape_renderer = std::make_unique<ShapeRenderer>(resource_manager->load_shader("shape.vert", "shape.frag", "", "shape"));
-			auto& shape_shader = resource_manager->get_shader("shape");
-			shape_shader.use().set_matrix4("projection", projection);
-			shape_shader.set_matrix4("view", view);
+
+			this->set_viewport(0, 0, window->get_window_width(), window->get_window_height());
+			this->set_projection(0.0f, 0.0f, window->get_window_width(), window->get_monitor_height());
+			this->set_camera();
 		}
 
 		///Flushes the command buffers
@@ -230,32 +247,63 @@ namespace OdisEngine
 			shape_renderer->flush();
 		}
 
-		void draw_to_frame_buffer(FrameBuffer& frame_buffer)
+		void begin_texture_mode(RenderTexture& frame_buffer)
 		{
+			// get the aspect ratio, relative to game res
+			float aspect = aspect_ratio(window->get_window_size(), frame_buffer.size());
+
+			//calculate the offset to center the frame buffer on the screen and scale it to fit the screen while maintaining aspect ratio 
+			//set_viewport(window->get_window_width() - frame_buffer.width() * aspect, window->get_window_height() - frame_buffer.height() * aspect, frame_buffer.width() * aspect, frame_buffer.height() * aspect);
+			this->set_viewport(0, 0, frame_buffer.width(), frame_buffer.height());
+			this->set_projection(0, 0, frame_buffer.width(), frame_buffer.height());
 			frame_buffer_renderer->begin_draw(frame_buffer);
 			clear();
 		}
 
-		void end_frame_buffer_draw()
+		void end_texture_mode()
 		{
+			//flush any submitted calls to ensure they are executed
+			this->flush();
+
+			//end drawing to the frame buffer
 			frame_buffer_renderer->end_draw();
+
+			//reset the viewport back to the screen size
+			this->set_viewport(0, 0, window->get_window_width(), window->get_window_height());
 		}
 
 		template <VectorType T = glm::vec2>
-		void draw_frame_buffer(FrameBuffer& frame_buffer, T position, T scale, float rotation)
+		void draw_texture(RenderTexture& frame_buffer, T position, T scale, float rotation)
 		{
-
-			frame_buffer_renderer->draw_frame_buffer(frame_buffer, position, scale, rotation);
+			//this->set_viewport(0, 0, window->get_window_width(), window->get_window_height());
+			frame_buffer_renderer->draw_frame_buffer(frame_buffer);
 		}
 
+		void last_camera()
+		{
+			resource_manager->get_shader("shape").use().set_matrix4("view", view);
+			resource_manager->get_shader("sprite").use().set_matrix4("view", view);
+			resource_manager->get_shader("text").use().set_matrix4("view", view);
+			resource_manager->get_shader("screen").use().set_matrix4("view", view);
+		}
+
+		void set_camera()
+		{
+			resource_manager->get_shader("shape").use().set_matrix4("view", default_camera);
+			resource_manager->get_shader("sprite").use().set_matrix4("view", default_camera);
+			resource_manager->get_shader("text").use().set_matrix4("view", default_camera);
+			resource_manager->get_shader("screen").use().set_matrix4("view", default_camera);
+		}
 
 		template <VectorType T = glm::vec2>
 		void set_camera(T pos, float rotation)
 		{
-			glm::mat4 view = glm::inverse(build_view_matrix(pos, rotation));
+			glm::mat4 temp = glm::inverse(build_view_matrix(pos, rotation));
 
-			resource_manager->get_shader("shape").use().set_matrix4("view", view);
-			resource_manager->get_shader("sprite").use().set_matrix4("view", view);
+			resource_manager->get_shader("shape").use().set_matrix4("view", temp);
+			resource_manager->get_shader("sprite").use().set_matrix4("view", temp);
+			resource_manager->get_shader("text").use().set_matrix4("view", temp);
+			resource_manager->get_shader("screen").use().set_matrix4("view", temp);
 		}
 
 		/** \overload */

@@ -140,7 +140,7 @@ namespace OdisEngine
 				1.0f, 0.0f,
 			};
 
-			mesh.set_vertices(std::move(rect_vertices), 2);
+			mesh.set_vertices(std::move(rect_vertices), DrawMode::dynamic_draw, 2);
 
 			mesh.bind();
 
@@ -236,7 +236,7 @@ namespace OdisEngine
 			glBindBuffer(GL_ARRAY_BUFFER, shape_color_buffer);
 			glBufferSubData(GL_ARRAY_BUFFER, offset, rectangle_models.size() * sizeof(glm::mat4), rectangle_colors.data());
 
-			mesh.draw_instanced(DrawMode::triangle_strip, 4, rectangle_models.size());
+			mesh.draw_instanced(DrawPrimitive::triangle_strip, 4, rectangle_models.size());
 
 			rectangle_models.clear();
 			rectangle_colors.clear();
